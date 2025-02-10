@@ -61,16 +61,18 @@ body {
 /* ====== Teclado Virtual ====== */
 #keyboard {
   width: 100%;
-  max-width: 600px; /* Para mantener consistencia entre dispositivos */
+  max-width: 600px; /* Mantiene consistencia entre dispositivos */
   margin: 20px auto;
   background-color: #1f1f1f;
   padding: 10px;
   border-radius: 10px;
-  /* Variables para calcular el tamaño de las teclas:
-     Suponemos 10 teclas en la primera fila y un gap de 5px entre ellas */
-  --gap: 5px;
+  /* Definimos las variables:
+     --num-keys: número máximo de teclas en una fila (la primera fila tiene 10 letras)
+     --gap: espacio entre teclas
+     --key-size: tamaño de cada tecla, calculado a partir del ancho disponible */
   --num-keys: 10;
-  --key-height: calc((100% - (var(--num-keys) - 1) * var(--gap)) / var(--num-keys));
+  --gap: 5px;
+  --key-size: calc((100% - (var(--num-keys) - 1) * var(--gap)) / var(--num-keys));
 }
 
 .keyboard-row {
@@ -78,15 +80,13 @@ body {
   gap: var(--gap);
   flex-wrap: nowrap;
   justify-content: center;
-  /* Forzamos que todas las filas tengan la misma altura */
-  height: var(--key-height);
+  /* No forzamos una altura fija aquí; cada tecla tendrá su tamaño basado en --key-size */
 }
 
-/* Todas las teclas de letra tendrán el mismo tamaño y mostrarán texto en mayúscula */
+/* Todas las teclas de letra serán cuadradas y mostrarán el texto en mayúscula */
 .key {
-  flex: 0 0 var(--key-height);
-  height: 100%;
-  width: var(--key-height);
+  width: var(--key-size);
+  height: var(--key-size);
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -99,10 +99,10 @@ body {
   user-select: none;
 }
 
-/* Las teclas especiales serán un poco más anchas para llenar el espacio */
+/* Las teclas especiales serán un poco más grandes (20% más) en ambos ejes */
 .key-special {
-  flex: 0 0 calc(var(--key-height) * 1.2);
-  height: 100%;
+  width: calc(var(--key-size) * 1.2);
+  height: calc(var(--key-size) * 1.2);
 }
 
 /* Reglas para cambiar el color de las teclas según su estado */
@@ -159,5 +159,5 @@ body {
   .cell {
     font-size: 1.2rem;
   }
-  /* Las reglas para .key se mantienen; la altura se adapta según la variable definida */
+  /* Las reglas para .key se mantienen; el tamaño se recalcula según el ancho del contenedor */
 }
