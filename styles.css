@@ -1,30 +1,35 @@
-/* ====== Reset básico ====== */
+/* ========== Reset básico ========== */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* ====== Estilos Globales ====== */
+/* ========== Estilos Globales ========== */
 body {
   font-family: Arial, sans-serif;
   background-color: #121212;
-  color: white;
+  color: #fff;
   text-align: center;
   padding: 20px;
 }
 
-/* ====== Botón Genérico ====== */
+/* Título */
+h1 {
+  margin-bottom: 20px;
+}
+
+/* ========== Botón Genérico ========== */
 .button {
-  width: 150px;
-  height: 50px;
+  width: 120px;
+  height: 45px;
   font-size: 1rem;
   font-weight: bold;
   border-radius: 8px;
   border: none;
   background-color: #222;
   color: white;
-  margin: 5px;
+  margin: 10px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
 }
@@ -37,24 +42,26 @@ body {
   transform: scale(0.95);
 }
 
-/* ====== Mensajes ====== */
+/* ========== Mensajes ========== */
 #message {
   min-height: 1.5em;
   margin: 10px 0;
   font-weight: bold;
 }
+#reveal-word {
+  margin-top: 5px;
+}
 
-/* ====== Tablero (6 filas, 5 columnas) ====== */
+/* ========== Tablero (6 filas x 5 columnas) ========== */
 #grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   width: 90%;
   max-width: 400px;
-  margin: 20px auto;
+  margin: 0 auto 30px auto;
 }
 
-/* Celdas del tablero */
 .cell {
   position: relative;
   background-color: #2c2c2c;
@@ -62,8 +69,9 @@ body {
   border-radius: 5px;
   width: 100%;
   height: 0;
-  padding-top: 100%; /* Para que la celda sea cuadrada */
+  padding-top: 100%; /* Para celdas cuadradas */
 }
+
 .cell span {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -75,7 +83,7 @@ body {
   text-transform: uppercase;
 }
 
-/* Estados de las celdas */
+/* ========== Colores de celdas: correct, present, absent ========== */
 .correct {
   background-color: #4caf50;
   color: white;
@@ -89,41 +97,58 @@ body {
   color: white;
 }
 
-/* ====== Teclado Flexible ====== */
+/* ========== Contenedor principal del teclado ========== */
 #keyboard {
-  /* Un contenedor centrado con ancho máximo */
-  width: 100%;
+  width: 90%;
   max-width: 600px;
-  margin: 20px auto;
+  margin: 0 auto 20px auto;
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Espacio vertical entre filas */
+  gap: 10px;
+  /* Le ponemos un borde para visualizar el área */
+  border: 1px solid #888;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-/* Cada fila del teclado */
+/* ========== Cada fila del teclado ========== */
 .row {
+  /* Forzamos que todo quede en 1 línea */
   display: flex;
-  flex-wrap: wrap;       /* Permite que las teclas hagan salto de línea si no hay espacio */
+  flex-wrap: nowrap;
+  /* Espacio horizontal entre teclas (alternativa a margin en .key) */
+  gap: 8px;
+  /* Si el contenedor es muy estrecho, aparecerá scrollbar horizontal */
+  overflow-x: auto;
   justify-content: center;
-  gap: 8px;             /* Espacio horizontal/vertical entre teclas */
 }
 
-/* Teclas */
+/* ========== Teclas ========== */
 .key {
   background-color: #999;
   color: #fff;
   border-radius: 5px;
-  cursor: pointer;
-  user-select: none;
   font-size: 1rem;
   text-transform: uppercase;
   text-align: center;
-  padding: 0.6rem 0.8rem;
-  /* El flex: 0 1 auto deja que crezca o reduzca según el espacio */
-  flex: 0 1 auto;
-  min-width: 2.4rem;   /* Un ancho mínimo */
-  transition: background-color 0.3s, transform 0.2s;
+  cursor: pointer;
+  user-select: none;
+  
+  /* 
+    flex: 1 1 0 
+    => "1" permite crecer si hay espacio,
+       "1" permite encogerse si no hay tanto espacio, 
+       "0" como base de cálculo de anchura.
+    Con min-width podemos controlar el límite mínimo.
+  */
+  flex: 1 1 0;       
+  min-width: 35px;   /* tamaño mínimo en px */
+  height: 45px;      /* altura fija */
+  line-height: 45px; /* centra verticalmente el texto */
+  
+  transition: background-color 0.2s, transform 0.2s;
 }
+
 .key:hover {
   background-color: #444;
   transform: scale(1.05);
@@ -133,7 +158,13 @@ body {
   transform: scale(0.95);
 }
 
-/* Colores cuando la tecla se marca como correct/present/absent */
+/* Tecla con icono especial */
+.key.backspace::before {
+  content: "⌫";
+}
+/* Si prefieres usar textContent, lo cambias desde JS */
+
+/* Colores cuando la tecla se marca */
 .key.correct {
   background-color: #4caf50 !important;
   color: white !important;
@@ -147,9 +178,10 @@ body {
   color: white !important;
 }
 
-/* ====== Responsivo para móviles ====== */
+/* ========== Responsivo ========== */
 @media (max-width: 600px) {
   .key {
     font-size: 0.9rem;
+    min-width: 30px;  /* puede reducir un poco en móvil */
   }
 }

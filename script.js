@@ -1,5 +1,7 @@
 /************************************************************
- * script.js - Ejemplo de Wordle con teclado flexible
+ * script.js - Ejemplo Wordle (simplificado) con teclado 
+ * que NO pasa teclas a la segunda fila.
+ * Cada fila está en un solo contenedor flex-wrap: nowrap.
  ************************************************************/
 
 /* ==================== Variables Globales ==================== */
@@ -7,54 +9,58 @@ let currentRow = 0;
 let currentCol = 0;
 let gameOver = false;
 
-const maxAttempts = 6;   // 6 intentos
+const maxAttempts = 6;   // 6 intentos (Wordle)
 const allowedLetters = "qwertyuiopasdfghjklñzxcvbnm";
 let targetWord = "";
 
-// Lista de palabras candidatas (simplemente ejemplos)
-const wordSelectionList = ["frase", "perro", "gatos", "nubes", "agita", "albor"];
-// Lista de palabras que se consideran “válidas”
-const wordValidationList = ["frase", "perro", "gatos", "nubes", "agita", "albor"];
+// Palabras de ejemplo (todas de 5 letras)
+const wordSelectionList = ["perro", "gatos", "nubes", "agita", "albor", "frase"];
+// Lista de validación (puedes ampliarla)
+const wordValidationList = wordSelectionList.slice(); // Reutilizo las mismas
 
-/* ==================== Inicialización del Juego ==================== */
+/* ==================== Inicialización ==================== */
 document.addEventListener("DOMContentLoaded", () => {
-  // Vinculamos botón Reiniciar
-  document.getElementById("reset-game").addEventListener("click", resetGame);
+  // Generar Tablero (6 filas x 5 columnas)
+  generateGrid();
+
+  // Generar Teclado (3 filas, una sola línea c/u)
+  generateKeyboard();
+
+  // Seleccionar palabra al azar
+  selectRandomWord();
   
-  // Vinculamos teclado físico
+  // Manejo de teclado físico
   document.addEventListener("keydown", (event) => {
     handleKeyPress(event.key);
   });
-  
-  // Inicial
-  selectRandomWord();
-  generateGrid();
-  generateKeyboard();
+
+  // Botón para reiniciar
+  document.getElementById("reset-game").addEventListener("click", resetGame);
 });
 
-/* ==================== Selección de Palabra Aleatoria ==================== */
+/* ==================== Selecciona Palabra Aleatoria ==================== */
 function selectRandomWord() {
-  // Filtra para que sean de 5 letras
   const words = wordSelectionList.filter(w => w.length === 5);
   if (words.length === 0) {
-    console.error("No hay palabras de 5 letras en la lista.");
+    console.error("No hay palabras de 5 letras.");
     targetWord = "perro";
     return;
   }
-  const index = Math.floor(Math.random() * words.length);
-  targetWord = words[index].toLowerCase();
+  const randomIndex = Math.floor(Math.random() * words.length);
+  targetWord = words[randomIndex];
 }
 
-/* ==================== Generar el Tablero (6 filas x 5 columnas) ==================== */
+/* ==================== Generar Tablero ==================== */
 function generateGrid() {
   currentRow = 0;
   currentCol = 0;
   gameOver = false;
-  
+  document.getElementById("message").innerText = "";
+  document.getElementById("reveal-word").innerText = "";
+
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
   
-  // Creamos 6 * 5 = 30 celdas
   for (let i = 0; i < maxAttempts * 5; i++) {
     const cell = document.createElement("div");
     cell.classList.add("cell");
@@ -64,69 +70,60 @@ function generateGrid() {
   }
 }
 
-/* ==================== Generar el Teclado con Flex ==================== */
+/* ==================== Generar Teclado ==================== */
 function generateKeyboard() {
-  const keyboardLayout = [
-    // Fila 1
-    ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
-    // Fila 2
-    ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ñ"],
-    // Fila 3 (incluimos backspace y enter al final)
-    ["z", "x", "c", "v", "b", "n", "m", "backspace", "enter"]
-  ];
-  
-  const keyboardDiv = document.getElementById("keyboard");
-  keyboardDiv.innerHTML = "";  // Limpia si ya existía
-  
-  // Construimos fila por fila
-  keyboardLayout.forEach((rowKeys) => {
-    const rowDiv = document.createElement("div");
-    rowDiv.classList.add("row");
-    
-    rowKeys.forEach((keyVal) => {
-      const keyEl = document.createElement("div");
-      keyEl.classList.add("key");
-      
-      // Texto a mostrar
-      if (keyVal === "backspace") {
-        keyEl.textContent = "⌫";
-      } else if (keyVal === "enter") {
-        keyEl.textContent = "Enter";
-      } else {
-        keyEl.textContent = keyVal;
-      }
-      
-      // ID para cada tecla
-      keyEl.id = "key-" + keyVal;
-      
-      // Evento de click
-      keyEl.addEventListener("click", () => handleKeyPress(keyVal));
-      
-      rowDiv.appendChild(keyEl);
-    });
-    
-    keyboardDiv.appendChild(rowDiv);
-  });
+  // Filas de letras
+  const row1 = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"];
+  const row2 = ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ñ"];
+  const row3 = ["z", "x", "c", "v", "b", "n", "m", "backspace", "enter"];
+
+  // Limpiamos cada fila
+  document.querySelector(".row-1").innerHTML = "";
+  document.querySelector(".row-2").innerHTML = "";
+  document.querySelector(".row-3").innerHTML = "";
+
+  // Construimos cada fila en una sola línea
+  row1.forEach(letter => createKey(letter, document.querySelector(".row-1")));
+  row2.forEach(letter => createKey(letter, document.querySelector(".row-2")));
+  row3.forEach(letter => createKey(letter, document.querySelector(".row-3")));
 }
 
-/* ==================== Manejo de Inputs ==================== */
+function createKey(letter, rowContainer) {
+  const keyDiv = document.createElement("div");
+  keyDiv.classList.add("key");
+  if (letter === "backspace") {
+    keyDiv.classList.add("backspace");
+    keyDiv.textContent = "⌫";
+  } else if (letter === "enter") {
+    keyDiv.textContent = "Enter";
+  } else {
+    keyDiv.textContent = letter;
+  }
+  
+  // ID opcional para poder colorear luego
+  keyDiv.id = "key-" + letter;
+  
+  // Evento al hacer click
+  keyDiv.addEventListener("click", () => handleKeyPress(letter));
+  
+  rowContainer.appendChild(keyDiv);
+}
+
+/* ==================== Manejo de Entrada de Teclas ==================== */
 function handleKeyPress(key) {
   if (gameOver) return;
-  
-  // Normaliza a minúsculas
+
   key = key.toLowerCase();
   
-  // Enter
   if (key === "enter") {
     if (currentCol === 5) {
       checkWord();
     } else {
-      showMessage("Completa las 5 letras antes de enviar.");
+      showMessage("Faltan letras.");
     }
     return;
   }
   
-  // Backspace
   if (key === "backspace" || key === "delete") {
     if (currentCol > 0) {
       currentCol--;
@@ -136,10 +133,8 @@ function handleKeyPress(key) {
     return;
   }
   
-  // Solo letras permitidas
   if (!allowedLetters.includes(key)) return;
   
-  // Llenar la celda
   if (currentCol < 5) {
     const cells = document.querySelectorAll(".cell span");
     cells[currentRow * 5 + currentCol].textContent = key.toUpperCase();
@@ -147,59 +142,41 @@ function handleKeyPress(key) {
   }
 }
 
-/* ==================== Validar Palabra y Revisar ==================== */
+/* ==================== Validar y Procesar la Palabra ==================== */
 function checkWord() {
-  let word = "";
   const cells = document.querySelectorAll(".cell span");
+  let word = "";
   
-  // Recolecta la palabra ingresada en la fila actual
   for (let i = 0; i < 5; i++) {
-    const letter = cells[currentRow * 5 + i].textContent.toLowerCase();
-    word += letter;
+    word += cells[currentRow * 5 + i].textContent.toLowerCase();
   }
   
-  // Verifica si la palabra está en la lista de palabras válidas
   if (!wordValidationList.includes(word)) {
-    showMessage("❌ Esa palabra no está en la lista.");
+    showMessage("❌ No está en la lista.");
     return;
   }
   
-  // Procesa coincidencias
   processWord(word);
 }
 
-/* ==================== Mostrar Mensajes ==================== */
-function showMessage(text) {
-  const msgEl = document.getElementById("message");
-  if (!msgEl) return;
-  msgEl.innerText = text;
-  setTimeout(() => {
-    msgEl.innerText = "";
-  }, 2000);
-}
-
-/* ==================== Procesar la Palabra ==================== */
 function processWord(inputWord) {
   const cells = document.querySelectorAll(".cell span");
-  // Conteo de letras en la palabra objetivo
-  let letterCount = {};
-  for (let letter of targetWord) {
-    letterCount[letter] = (letterCount[letter] || 0) + 1;
+  const letterCount = {};
+  for (let char of targetWord) {
+    letterCount[char] = (letterCount[char] || 0) + 1;
   }
   
-  // Paso 1: marcar "correct"
+  // Primera pasada: correct
   for (let i = 0; i < 5; i++) {
     const letter = inputWord[i];
     if (letter === targetWord[i]) {
-      // Marca la celda
       cells[currentRow * 5 + i].parentElement.classList.add("correct");
-      // Marca la tecla
       updateKeyColor(document.getElementById("key-" + letter), "correct");
       letterCount[letter]--;
     }
   }
   
-  // Paso 2: marcar "present" o "absent"
+  // Segunda pasada: present / absent
   for (let i = 0; i < 5; i++) {
     const letter = inputWord[i];
     const cellDiv = cells[currentRow * 5 + i].parentElement;
@@ -215,67 +192,64 @@ function processWord(inputWord) {
     }
   }
   
-  // ¿Ganó?
+  // Verificar victoria
   if (inputWord === targetWord) {
-    showMessage("🎉 ¡Ganaste!");
+    showMessage("¡Ganaste!");
+    revealWord("La palabra era: " + targetWord.toUpperCase());
     gameOver = true;
-    revealWord(`La palabra era: ${targetWord.toUpperCase()}`);
     return;
   }
   
-  // ¿Se acabaron los intentos?
+  // Verificar si se acabaron los intentos
   if (currentRow === maxAttempts - 1) {
-    showMessage("❌ ¡Se acabaron los intentos!");
-    revealWord(`La palabra era: ${targetWord.toUpperCase()}`);
+    showMessage("¡Se acabaron los intentos!");
+    revealWord("La palabra era: " + targetWord.toUpperCase());
     gameOver = true;
     return;
   }
   
-  // Si sigue el juego, pasa a la siguiente fila
+  // Siguiente intento
   currentRow++;
   currentCol = 0;
 }
 
-/* ==================== Colorear Teclas ==================== */
-function updateKeyColor(keyEl, statusClass) {
+/* ==================== Actualizar Color de Teclas ==================== */
+function updateKeyColor(keyEl, newStatus) {
   if (!keyEl) return;
-  // Priorizamos correct > present > absent
-  const priority = { "unused": 0, "absent": 1, "present": 2, "correct": 3 };
-  const currentClass = keyEl.classList.contains("correct")
-    ? "correct"
-    : keyEl.classList.contains("present")
-    ? "present"
-    : keyEl.classList.contains("absent")
-    ? "absent"
-    : "unused";
-  
-  if (priority[statusClass] > priority[currentClass]) {
+
+  // Prioridades
+  const priority = { unused: 0, absent: 1, present: 2, correct: 3 };
+  // Detecta el estado actual
+  let currStatus = "unused";
+  if (keyEl.classList.contains("correct")) currStatus = "correct";
+  else if (keyEl.classList.contains("present")) currStatus = "present";
+  else if (keyEl.classList.contains("absent")) currStatus = "absent";
+
+  if (priority[newStatus] > priority[currStatus]) {
     keyEl.classList.remove("correct", "present", "absent", "unused");
-    keyEl.classList.add(statusClass);
+    keyEl.classList.add(newStatus);
   }
 }
 
-/* ==================== Mostrar la Palabra Final ==================== */
+/* ==================== Mostrar Mensajes ==================== */
+function showMessage(msg) {
+  const msgEl = document.getElementById("message");
+  msgEl.innerText = msg;
+  setTimeout(() => {
+    msgEl.innerText = "";
+  }, 2000);
+}
+
 function revealWord(text) {
   const revealEl = document.getElementById("reveal-word");
-  if (revealEl) {
-    revealEl.innerText = text;
-  }
+  revealEl.innerText = text;
 }
 
-/* ==================== Reiniciar el Juego ==================== */
+/* ==================== Reiniciar ==================== */
 function resetGame() {
-  // Limpia mensaje y palabra revelada
-  document.getElementById("message").innerText = "";
-  document.getElementById("reveal-word").innerText = "";
-  
-  // Nueva palabra
   selectRandomWord();
-  
-  // Nueva grilla
   generateGrid();
-  
-  // Quitar marcados de las teclas
+  // Quitar colores de teclas
   document.querySelectorAll(".key").forEach(k => {
     k.classList.remove("correct", "present", "absent");
   });

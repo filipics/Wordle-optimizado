@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wordle Adaptable</title>
-  <!-- Enlaza el CSS externo -->
-  <link rel="stylesheet" href="styles.css" />
+  <title>Wordle Adaptable en una sola línea</title>
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-  <h1>Wordle</h1>
+
+  <h1>Wordle (Teclado en filas sin salto)</h1>
   
-  <!-- Botones de ejemplo -->
-  <button id="reset-game" class="button">Reiniciar</button>
-  
-  <!-- Mensajes de estado -->
-  <p id="message"></p>
-  <!-- Mostramos el tablero (6 intentos, 5 columnas) -->
+  <!-- Tablero de ejemplo (6 intentos x 5 columnas) -->
   <div id="grid"></div>
-  <!-- Revelar palabra en caso de que se pierda -->
+  
+  <!-- Contenedor principal del teclado -->
+  <div id="keyboard">
+    <!-- Fila 1 -->
+    <div class="row row-1"></div>
+    <!-- Fila 2 -->
+    <div class="row row-2"></div>
+    <!-- Fila 3 -->
+    <div class="row row-3"></div>
+  </div>
+  
+  <!-- Mensajes -->
+  <p id="message"></p>
   <p id="reveal-word"></p>
   
-  <!-- Contenedor principal del teclado (en una sola sección) -->
-  <div id="keyboard"></div>
+  <!-- Botón para reiniciar la partida -->
+  <button id="reset-game" class="button">Reiniciar</button>
   
-  <!-- Referencia al archivo JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>
