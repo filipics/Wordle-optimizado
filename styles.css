@@ -27,20 +27,28 @@ body {
   border-radius: 10px;
 }
 
-/* Usamos aspect-ratio para que cada celda sea cuadrada y centramos el contenido */
 .cell {
+  background-color: #2c2c2c;
+  border: 2px solid white;
+  border-radius: 5px;
+  position: relative;
   width: 100%;
-  aspect-ratio: 1;
+  /* Técnica para que la celda sea cuadrada */
+  height: 0;
+  padding-top: 100%;
+}
+.cell span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
   font-weight: bold;
   text-transform: uppercase;
-  background-color: #2c2c2c;
-  color: white;
-  border: 2px solid white;
-  border-radius: 5px;
 }
 
 /* Estados de las celdas */
@@ -65,34 +73,29 @@ body {
   background-color: #121212;  /* Fondo igual que la página */
   padding: 10px;
   border-radius: 10px;
-  /* Variables para el tamaño de las teclas.
-     Asumimos que las filas 1 y 2 tienen 10 teclas.
-     Puedes ajustar --letter-key-size para cambiar el tamaño de cada tecla.
-  */
+  /* Variable base para el tamaño de cada tecla (filas 1 y 2) */
+  --letter-key-size: 50px; /* Podés ajustar este valor para cambiar el tamaño base */
   --gap: 5px;
-  --letter-key-size: 50px; /* Tamaño base de cada tecla (ancho y alto) */
 }
 
-/* Aumentamos la altura mínima del contenedor para que tenga al menos 3 filas */
+/* Aseguramos que el contenedor tenga suficiente alto para 3 filas */
 #keyboard {
   min-height: calc(3 * var(--letter-key-size) + 2 * var(--gap));
 }
 
-/* Las filas se generan usando flex (para las filas 1 y 2) o grid (para la fila 3) */
-/* Filas 1 y 2 (sin cambios) */
+/* Filas 1 y 2 (flex layout, sin cambios) */
 .keyboard-row {
   display: flex;
   justify-content: center;
   gap: var(--gap);
   margin-bottom: var(--gap);
 }
-
 .row-1 .key,
 .row-2 .key {
-  background-color: #999;
-  border-radius: 5px;
   width: var(--letter-key-size);
   height: var(--letter-key-size);
+  background-color: #999;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,15 +106,17 @@ body {
   color: white;
 }
 
-/* Fila 3: usaremos CSS Grid con 10 columnas iguales */
+/* Fila 3 (grid layout) */
 .keyboard-row.row-3 {
   display: grid;
   grid-template-columns: repeat(10, var(--letter-key-size));
   gap: var(--gap);
   margin-bottom: var(--gap);
+  /* Fuerza que la altura de cada celda sea la misma */
+  grid-auto-rows: var(--letter-key-size);
 }
 
-/* En fila 3, todas las teclas (incluyendo el placeholder y Backspace) ocupan el 100% de la celda */
+/* En fila 3, todas las teclas ocuparán el 100% de la celda */
 .row-3 .key {
   width: 100%;
   height: 100%;
@@ -132,7 +137,7 @@ body {
   visibility: hidden;
 }
 
-/* El botón Backspace se extiende a 2 columnas */
+/* El botón de Backspace: se extiende a 2 columnas */
 .row-3 .key.backspace {
   grid-column: span 2;
 }
@@ -140,14 +145,14 @@ body {
 /* ====== Tecla Enter Superior ====== */
 #enter-key-container {
   margin: 0 auto 10px;
-  width: var(--letter-key-size);
-  height: var(--letter-key-size);
+  width: 100%;  /* Ocupa todo el ancho del teclado */
+  max-width: 600px;
 }
 #enter-key-container .key {
+  width: 100%;
+  height: calc(var(--letter-key-size) * 3);  /* Triple de alto que una tecla normal */
   background-color: #999;
   border-radius: 5px;
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -191,7 +196,7 @@ body {
     font-size: 0.9rem;
     line-height: 45px;
   }
-  .cell {
+  .cell span {
     font-size: 1.2rem;
   }
 }
