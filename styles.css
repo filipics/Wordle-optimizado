@@ -193,10 +193,7 @@ body {
   #keyboard {
     --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
   }
-  /* En móvil, hacer que Backspace ocupe 1 celda */
-  .row-3 .key.backspace {
-    grid-column: span 1;
-  }
+
   .row-1 .key, .row-2 .key, .row-3 .key, #enter-key-container .key {
     font-size: 0.9rem;
   }
