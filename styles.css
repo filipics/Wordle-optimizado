@@ -67,20 +67,21 @@ body {
   width: 100%;
   max-width: 600px;
   margin: 20px auto;
-  background-color: #121212; /* Fondo igual que la página */
+  background-color: #121212; /* Igual que el fondo de la página */
   padding: 10px;
   border-radius: 10px;
-  /* Variables para el tamaño de las teclas: se calcula de forma responsive */
+  /* Variables para el tamaño de las teclas:
+     Se calcula de forma responsive: dividimos el ancho (100%) en 10 partes,
+     restando los gaps entre ellas.
+     Puedes ajustar el valor mínimo usando clamp() si lo deseas. */
   --gap: 5px;
   --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
 }
-
-/* Aseguramos que el contenedor tenga suficiente alto para 3 filas */
 #keyboard {
   min-height: calc(3 * var(--letter-key-size) + 2 * var(--gap));
 }
 
-/* Filas 1 y 2: Usamos flex (sin cambios) */
+/* Filas 1 y 2: Se generan con flex (sin cambios) */
 .keyboard-row {
   display: flex;
   justify-content: center;
@@ -103,7 +104,7 @@ body {
   color: white;
 }
 
-/* Fila 3: Usamos grid para que todas las celdas sean iguales */
+/* Fila 3: Se genera con CSS Grid para tener 10 celdas iguales */
 .keyboard-row.row-3 {
   display: grid;
   grid-template-columns: repeat(10, var(--letter-key-size));
@@ -125,12 +126,10 @@ body {
   align-items: center;
   justify-content: center;
 }
-
-/* El placeholder de la fila 3: es invisible pero ocupa el mismo tamaño */
+/* El placeholder de la fila 3: invisible pero con el mismo tamaño */
 .row-3 .key.placeholder {
   visibility: hidden;
 }
-
 /* El botón de Backspace: en escritorio, ocupa 2 celdas */
 .row-3 .key.backspace {
   grid-column: span 2;
@@ -144,7 +143,7 @@ body {
 }
 #enter-key-container .key {
   width: 100%;
-  height: calc(var(--letter-key-size) * 3);  /* Triple de alto */
+  height: calc(var(--letter-key-size) * 3);  /* Triple de alto que una tecla normal */
   background-color: #999;
   border-radius: 5px;
   display: flex;
@@ -157,7 +156,7 @@ body {
   color: white;
 }
 
-/* ====== Reglas para Actualizar Colores de Teclas (forzados) ====== */
+/* ====== Reglas para Actualizar Colores de Teclas ====== */
 .key.correct {
   background-color: #4caf50 !important;
   color: white !important;
@@ -199,9 +198,9 @@ body {
 /* ====== Media Queries para Móviles ====== */
 @media (max-width: 600px) {
   #keyboard {
-    --letter-key-size: calc((100% - 9 * var(--gap)) / 10); /* Se recalcula automáticamente según el ancho */
+    --letter-key-size: calc((100% - 9 * var(--gap)) / 10); /* Se recalcula según el ancho */
   }
-  /* En móvil, para que el Backspace no sea demasiado grande, lo hacemos ocupar solo 1 celda */
+  /* En móvil, para que el Backspace no sea demasiado ancho, lo hacemos ocupar solo 1 celda */
   .row-3 .key.backspace {
     grid-column: span 1;
   }
