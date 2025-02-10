@@ -24,16 +24,12 @@ function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
   if (savedGame && savedGame.lastPlayedDate === new Date().toDateString()) {
     currentRow = savedGame.currentRow || 0;
-    // Restaurar el tablero
     const cells = document.querySelectorAll(".cell");
     savedGame.boardState.forEach((cellData, index) => {
       cells[index].innerText = cellData.letter;
       cells[index].classList.remove("correct", "present", "absent");
-      if (cellData.class) {
-        cells[index].classList.add(cellData.class);
-      }
+      if (cellData.class) cells[index].classList.add(cellData.class);
     });
-    // Restaurar el teclado
     const keys = document.querySelectorAll(".key");
     savedGame.keyboardState.forEach(keyData => {
       const keyElement = document.getElementById(`key-${keyData.letter}`);
@@ -153,66 +149,78 @@ function generateGrid() {
 function generateKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
-  // Definimos las filas con sus datos.
-  // Las filas 1 y 2 tienen 10 teclas (una por cada letra de la cadena).
-  // Para la fila 3, queremos 10 elementos: Backspace, 7 letras de "zxcvbnm", Enter y un placeholder.
+  
+  // Filas 1 y 2 (se generan como antes)
   const rows = [
     { letters: "qwertyuiop", className: "row-1" },
-    { letters: "asdfghjklñ", className: "row-2" },
-    { letters: "zxcvbnm", className: "row-3" }
+    { letters: "asdfghjklñ", className: "row-2" }
   ];
   
   rows.forEach(rowObj => {
     const rowDiv = document.createElement("div");
     rowDiv.classList.add("keyboard-row", rowObj.className);
-    
-    if (rowObj.className === "row-3") {
-      // Inserta Backspace
-      const backspaceKey = document.createElement("div");
-      backspaceKey.classList.add("key");
-      backspaceKey.textContent = "←";
-      backspaceKey.id = "key-backspace";
-      backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
-      rowDiv.appendChild(backspaceKey);
-      
-      // Agrega las letras de "zxcvbnm"
-      for (const letter of rowObj.letters) {
-        const key = document.createElement("div");
-        key.classList.add("key");
-        key.textContent = letter;
-        key.id = `key-${letter}`;
-        key.dataset.status = "unused";
-        key.addEventListener("click", () => handleKeyPress(letter));
-        rowDiv.appendChild(key);
-      }
-      
-      // Inserta Enter
-      const enterKey = document.createElement("div");
-      enterKey.classList.add("key");
-      enterKey.textContent = "Enter";
-      enterKey.id = "key-enter";
-      enterKey.addEventListener("click", () => handleKeyPress("enter"));
-      rowDiv.appendChild(enterKey);
-      
-      // Inserta un placeholder vacío para completar 10 columnas
-      const placeholder = document.createElement("div");
-      placeholder.classList.add("key", "placeholder");
-      rowDiv.appendChild(placeholder);
-    } else {
-      // Para filas 1 y 2: genera cada tecla a partir de la cadena
-      rowObj.letters.split("").forEach(letter => {
-        const key = document.createElement("div");
-        key.classList.add("key");
-        key.textContent = letter;
-        key.id = `key-${letter}`;
-        key.dataset.status = "unused";
-        key.addEventListener("click", () => handleKeyPress(letter));
-        rowDiv.appendChild(key);
-      });
-    }
-    
+    rowObj.letters.split("").forEach(letter => {
+      const key = document.createElement("div");
+      key.classList.add("key");
+      key.textContent = letter;
+      key.id = `key-${letter}`;
+      key.dataset.status = "unused";
+      key.addEventListener("click", () => handleKeyPress(letter));
+      rowDiv.appendChild(key);
+    });
     keyboard.appendChild(rowDiv);
   });
+  
+  // Fila 3: 
+  // Queremos 10 celdas en total: 
+  // 1) Un placeholder invisible en la primera celda.
+  // 2) 7 teclas para "zxcvbnm".
+  // 3) 1 botón de Backspace que ocupe 2 columnas.
+  const row3Div = document.createElement("div");
+  row3Div.classList.add("keyboard-row", "row-3");
+  
+  // 1. Placeholder invisible
+  const placeholder = document.createElement("div");
+  placeholder.classList.add("key", "placeholder");
+  // La clase "placeholder" en CSS lo hace invisible.
+  row3Div.appendChild(placeholder);
+  
+  // 2. 7 letras de "zxcvbnm"
+  for (const letter of "zxcvbnm") {
+    const key = document.createElement("div");
+    key.classList.add("key");
+    key.textContent = letter;
+    key.id = `key-${letter}`;
+    key.dataset.status = "unused";
+    key.addEventListener("click", () => handleKeyPress(letter));
+    row3Div.appendChild(key);
+  }
+  
+  // 3. Botón de Backspace que ocupa 2 celdas
+  const backspaceKey = document.createElement("div");
+  backspaceKey.classList.add("key");
+  backspaceKey.textContent = "←";
+  backspaceKey.id = "key-backspace";
+  backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
+  // Hacemos que este elemento se extienda a 2 columnas:
+  backspaceKey.style.gridColumn = "span 2";
+  row3Div.appendChild(backspaceKey);
+  
+  keyboard.appendChild(row3Div);
+  
+  // Generar el botón Enter en el contenedor superior
+  generateEnterKey();
+}
+
+function generateEnterKey() {
+  const container = document.getElementById("enter-key-container");
+  container.innerHTML = "";
+  const enterKey = document.createElement("div");
+  enterKey.classList.add("key");
+  enterKey.textContent = "Enter";
+  enterKey.id = "key-enter-top";
+  enterKey.addEventListener("click", () => handleKeyPress("enter"));
+  container.appendChild(enterKey);
 }
 
 // ==================== Manejo de Mensajes ====================
