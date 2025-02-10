@@ -142,7 +142,7 @@ h1 {
     Con min-width podemos controlar el límite mínimo.
   */
   flex: 1 1 0;       
-  min-width: 35px;   /* tamaño mínimo en px */
+  /*min-width: 35px;   /* tamaño mínimo en px */
   height: 45px;      /* altura fija */
   line-height: 45px; /* centra verticalmente el texto */
   
