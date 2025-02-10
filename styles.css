@@ -127,7 +127,7 @@ body {
 }
 
 /* El botón de Backspace se va a extender 2 columnas */
-.row-3 .key.backspace {
+/*.row-3 .key.backspace {
   grid-column: span 2;
 }
 
