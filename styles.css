@@ -47,10 +47,12 @@ body {
   background-color: #4caf50;
   color: white;
 }
+
 .present {
   background-color: #ffeb3b;
   color: black;
 }
+
 .absent {
   background-color: #965050;
   color: white;
@@ -65,16 +67,14 @@ body {
   padding: 10px;
   border-radius: 10px;
   /* Variables para calcular el tamaño de las teclas:
-     - Suponemos que la primera fila tiene 10 teclas.
-     - --gap: espacio entre teclas.
-     - --letter-key-size: ancho (y alto) de cada tecla de letra. */
+     Suponemos que la primera fila tiene 10 teclas y se respeta un gap entre ellas */
   --gap: 5px;
   --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
   /* Las teclas especiales serán 1.2 veces más anchas */
   --special-size: calc(var(--letter-key-size) * 1.2);
 }
 
-/* Cada fila se define como un grid y se fuerza que las filas tengan la misma altura */
+/* Cada fila se define como un grid con altura fija igual a --letter-key-size */
 .keyboard-row {
   display: grid;
   gap: var(--gap);
@@ -93,10 +93,10 @@ body {
   grid-template-columns: var(--special-size) repeat(7, var(--letter-key-size)) var(--special-size);
 }
 
-/* Todas las teclas (de letra) se estiran para llenar la celda */
+/* Todas las teclas de letra: se forzan a ocupar el 100% de la celda y ser cuadradas */
 .key {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1;
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -110,10 +110,11 @@ body {
 }
 
 /* Para las teclas especiales (Backspace y Enter):
-   Se utiliza la clase "special". No se aplica aspect-ratio para que puedan ocupar el ancho mayor definido por la celda;
-   pero se forza el alto al 100% (igual que las demás teclas). */
+   Se elimina el aspect-ratio para que no se fuerce a ser cuadradas,
+   pero se fuerza el alto al 100% de la celda (lo que es igual a --letter-key-size),
+   de modo que tengan el mismo alto que las teclas de letra. */
 .key.special {
-  width: 100%;
+  aspect-ratio: unset;
   height: 100%;
 }
 
@@ -122,10 +123,12 @@ body {
   background-color: #4caf50;
   color: white;
 }
+
 .key.present {
   background-color: #ffeb3b;
   color: black;
 }
+
 .key.absent {
   background-color: #965050;
   color: white;
@@ -147,10 +150,12 @@ body {
   margin: 5px;
   transition: background-color 0.3s, transform 0.2s;
 }
+
 .button:active {
   background-color: #555;
   transform: scale(0.95);
 }
+
 .button:hover {
   background-color: #444;
   transform: scale(1.05);
