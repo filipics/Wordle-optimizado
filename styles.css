@@ -100,14 +100,14 @@ h1 {
 /* ========== Contenedor principal del teclado ========== */
 #keyboard {
   width: 100%;
-  max-width: 6000px;
-  margin: 0 auto 2px auto;
+  max-width: 600px;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 1px;
   /* Le ponemos un borde para visualizar el área */
-  border: 0px solid #888;
-  padding: 1px;
+  border: none;
+  padding: 0;
   box-sizing: border-box;
 }
 
