@@ -24,7 +24,7 @@ function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
   if (savedGame && savedGame.lastPlayedDate === new Date().toDateString()) {
     currentRow = savedGame.currentRow || 0;
-    // Restaurar el tablero
+    // Restaurar el estado del tablero
     const cells = document.querySelectorAll(".cell span");
     savedGame.boardState.forEach((cellData, index) => {
       cells[index].innerText = cellData.letter;
