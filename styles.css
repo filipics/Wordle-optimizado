@@ -64,8 +64,7 @@ body {
   flex-direction: column;
   align-items: center;
   margin: 20px auto;
-  width: 90%;
-  max-width: 400px;
+  /* Se usa ancho automático para que cada fila tenga el ancho natural de sus teclas */
   background-color: #1f1f1f;
   padding: 10px;
   border-radius: 10px;
@@ -75,24 +74,44 @@ body {
   display: flex;
   justify-content: center;
   margin-bottom: 5px;
-  flex-wrap: wrap; /* Permite ajustar las teclas si el ancho es reducido */
+  /* Forzamos que las teclas de cada fila no se envuelvan */
+  flex-wrap: nowrap;
 }
 
+/* Cada tecla tendrá un tamaño fijo para asemejarse al teclado físico */
 .key {
-  flex: 1 1 auto;
-  margin: 2px;
+  width: 45px;
+  height: 60px;
+  margin: 3px;
   text-align: center;
+  line-height: 60px;
   font-size: 1.5rem;
   font-weight: bold;
   background-color: #999999;
   border-radius: 5px;
   cursor: pointer;
   user-select: none;
-  padding: 10px;
 }
 
+/* Teclas especiales (Enter, Backspace) serán un poco más anchas */
 .key-special {
-  flex: 1 1 20%;
+  width: 65px;
+}
+
+/* Reglas para cambiar el color de las teclas según su estado */
+.key.correct {
+  background-color: #4caf50;
+  color: white;
+}
+
+.key.present {
+  background-color: #ffeb3b;
+  color: black;
+}
+
+.key.absent {
+  background-color: #965050;
+  color: white;
 }
 
 /* ====== Botones ====== */
@@ -135,6 +154,10 @@ body {
   }
   .key {
     font-size: 1.2rem;
-    padding: 8px;
+    width: 45px;  /* Se mantiene tamaño fijo para evitar que se rompa la fila */
+    height: 60px;
+  }
+  .key-special {
+    width: 65px;
   }
 }
