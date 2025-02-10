@@ -18705,7 +18705,7 @@ function resetGame() {
   selectRandomWord();
 }
 
-// ==================== Generación del Tablero y Teclado ====================
+// ==================== Generación del Tablero ====================
 function generateGrid() {
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
@@ -18716,43 +18716,67 @@ function generateGrid() {
   }
 }
 
+// ==================== Generación del Teclado ====================
 function generateKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
   const rows = ["qwertyuiop", "asdfghjklñ", "zxcvbnm"];
+  
   rows.forEach(row => {
     const rowDiv = document.createElement("div");
     rowDiv.classList.add("keyboard-row");
-    row.split("").forEach(letter => {
-      const key = document.createElement("div");
-      key.classList.add("key");
-      key.textContent = letter;
-      key.id = `key-${letter}`;
-      key.dataset.status = "unused";
-      key.addEventListener("click", () => handleKeyPress(letter));
-      rowDiv.appendChild(key);
-    });
+    
+    if (row === "zxcvbnm") {
+      // Para la tercera fila: insertar Backspace a la izquierda de "z"
+      const backspaceKey = document.createElement("div");
+      backspaceKey.classList.add("key", "key-special");
+      backspaceKey.textContent = "←";
+      backspaceKey.id = "key-backspace";
+      backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
+      rowDiv.appendChild(backspaceKey);
+      
+      // Crear la tecla para "z"
+      const letterKey = document.createElement("div");
+      letterKey.classList.add("key");
+      letterKey.textContent = "z";
+      letterKey.id = "key-z";
+      letterKey.dataset.status = "unused";
+      letterKey.addEventListener("click", () => handleKeyPress("z"));
+      rowDiv.appendChild(letterKey);
+      
+      // Insertar Enter a la derecha de "z"
+      const enterKey = document.createElement("div");
+      enterKey.classList.add("key", "key-special");
+      enterKey.textContent = "Enter";
+      enterKey.id = "key-enter";
+      enterKey.addEventListener("click", () => handleKeyPress("enter"));
+      rowDiv.appendChild(enterKey);
+      
+      // Agregar el resto de las letras (de "x" en adelante)
+      const remainingLetters = row.slice(1); // "xcvbnm"
+      for (const letter of remainingLetters) {
+        const key = document.createElement("div");
+        key.classList.add("key");
+        key.textContent = letter;
+        key.id = `key-${letter}`;
+        key.dataset.status = "unused";
+        key.addEventListener("click", () => handleKeyPress(letter));
+        rowDiv.appendChild(key);
+      }
+    } else {
+      // Para las otras filas se generan las teclas de forma habitual
+      row.split("").forEach(letter => {
+        const key = document.createElement("div");
+        key.classList.add("key");
+        key.textContent = letter;
+        key.id = `key-${letter}`;
+        key.dataset.status = "unused";
+        key.addEventListener("click", () => handleKeyPress(letter));
+        rowDiv.appendChild(key);
+      });
+    }
     keyboard.appendChild(rowDiv);
   });
-  // Fila extra para Backspace y Enter
-  const extraRow = document.createElement("div");
-  extraRow.classList.add("keyboard-row");
-  
-  const backspaceKey = document.createElement("div");
-  backspaceKey.classList.add("key", "key-special");
-  backspaceKey.textContent = "←";
-  backspaceKey.id = "key-backspace";
-  backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
-  extraRow.appendChild(backspaceKey);
-  
-  const enterKey = document.createElement("div");
-  enterKey.classList.add("key", "key-special");
-  enterKey.textContent = "Enter";
-  enterKey.id = "key-enter";
-  enterKey.addEventListener("click", () => handleKeyPress("enter"));
-  extraRow.appendChild(enterKey);
-  
-  keyboard.appendChild(extraRow);
 }
 
 // ==================== Manejo de Mensajes ====================
