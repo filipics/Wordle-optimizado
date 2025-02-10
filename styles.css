@@ -65,7 +65,7 @@ body {
   --gap: 5px;
   --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
 }
-#keyboard {
+/*#keyboard {
   min-height: calc(3 * var(--letter-key-size) + 2 * var(--gap));
 }
 
