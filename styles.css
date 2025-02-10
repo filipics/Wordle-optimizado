@@ -10,7 +10,7 @@ body {
 
 /* ====== Historial ====== */
 #history {
-  display: none; /* Se oculta por defecto */
+  display: none;
   margin-top: 10px;
 }
 
@@ -22,14 +22,14 @@ body {
   width: 90%;
   max-width: 400px;
   grid-template-columns: repeat(5, 1fr);
-  background-color: #121212;
+  background-color: #121212;  /* Cambio: ahora es #121212 */
   padding: 20px;
   border-radius: 10px;
 }
 
 .cell {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1/1;
   border: 2px solid white;
   display: flex;
   align-items: center;
@@ -47,12 +47,10 @@ body {
   background-color: #4caf50;
   color: white;
 }
-
 .present {
   background-color: #ffeb3b;
   color: black;
 }
-
 .absent {
   background-color: #965050;
   color: white;
@@ -63,21 +61,41 @@ body {
   width: 100%;
   max-width: 600px;
   margin: 20px auto;
-  background-color: #121212;
+  background-color: #121212;  /* Cambio: ahora es #121212 */
   padding: 10px;
   border-radius: 10px;
+  /* Variables para calcular el tamaño de las teclas:
+     Suponemos que la primera fila tiene 10 teclas. */
+  --gap: 5px;
+  /* Se calcula el tamaño de cada tecla (letra) restando los gaps:
+     (100% - (10-1)*gap) / 10 */
+  --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
+  /* Las teclas especiales serán 1.2 veces más anchas */
+  --special-size: calc(var(--letter-key-size) * 1.2);
 }
 
-/* Cada fila se definirá como un grid; el número de columnas se establecerá desde JS */
+/* Cada fila se define como una cuadrícula */
 .keyboard-row {
   display: grid;
-  gap: 5px;
-  margin-bottom: 5px;
+  gap: var(--gap);
+  margin-bottom: var(--gap);
 }
 
-/* Todas las teclas (de letra) serán cuadradas y mostrarán su texto en mayúscula */
+/* Para la primera y segunda fila: 10 columnas */
+.keyboard-row.row-1,
+.keyboard-row.row-2 {
+  grid-template-columns: repeat(10, var(--letter-key-size));
+}
+
+/* Para la tercera fila: Backspace, 7 letras y Enter */
+.keyboard-row.row-3 {
+  grid-template-columns: var(--special-size) repeat(7, var(--letter-key-size)) var(--special-size);
+}
+
+/* Las teclas de letra */
 .key {
   width: 100%;
+  /* Forzamos que sean cuadradas */
   aspect-ratio: 1;
   text-transform: uppercase;
   display: flex;
@@ -91,19 +109,22 @@ body {
   user-select: none;
 }
 
-/* Las teclas especiales se podrán ajustar mediante grid (se definen en la plantilla de columnas desde JS) */
+/* Para las teclas especiales (backspace y enter), queremos que tengan el mismo alto que las letras pero mayor ancho.
+   No se aplica aspect-ratio para que puedan estirarse en ancho. */
+.key.special {
+  height: var(--letter-key-size);
+  /* El ancho ya se determina por la cuadrícula (var(--special-size)) */
+}
 
 /* Reglas para cambiar el color de las teclas según su estado */
 .key.correct {
   background-color: #4caf50;
   color: white;
 }
-
 .key.present {
   background-color: #ffeb3b;
   color: black;
 }
-
 .key.absent {
   background-color: #965050;
   color: white;
@@ -125,12 +146,10 @@ body {
   margin: 5px;
   transition: background-color 0.3s, transform 0.2s;
 }
-
 .button:active {
   background-color: #555;
   transform: scale(0.95);
 }
-
 .button:hover {
   background-color: #444;
   transform: scale(1.05);
