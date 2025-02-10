@@ -22,7 +22,7 @@ body {
   width: 90%;
   max-width: 400px;
   grid-template-columns: repeat(5, 1fr);
-  background-color: #121212;  /* Fondo igual que la página */
+  background-color: #121212;
   padding: 20px;
   border-radius: 10px;
 }
@@ -70,12 +70,12 @@ body {
   width: 100%;
   max-width: 600px;
   margin: 20px auto;
-  background-color: #121212;  /* Fondo igual que la página */
+  background-color: #121212;
   padding: 10px;
   border-radius: 10px;
-  /* Variable base para el tamaño de cada tecla (filas 1 y 2) */
-  --letter-key-size: 50px; /* Podés ajustar este valor para cambiar el tamaño base */
+  /* Variables para el tamaño de las teclas */
   --gap: 5px;
+  --letter-key-size: 50px;  /* Tamaño base en escritorio */
 }
 
 /* Aseguramos que el contenedor tenga suficiente alto para 3 filas */
@@ -83,7 +83,7 @@ body {
   min-height: calc(3 * var(--letter-key-size) + 2 * var(--gap));
 }
 
-/* Filas 1 y 2 (flex layout, sin cambios) */
+/* Filas 1 y 2: (se mantienen sin cambios) */
 .keyboard-row {
   display: flex;
   justify-content: center;
@@ -106,17 +106,14 @@ body {
   color: white;
 }
 
-/* Fila 3 (grid layout) */
+/* Fila 3: Se genera con CSS Grid para tener 10 celdas iguales */
 .keyboard-row.row-3 {
   display: grid;
   grid-template-columns: repeat(10, var(--letter-key-size));
   gap: var(--gap);
   margin-bottom: var(--gap);
-  /* Fuerza que la altura de cada celda sea la misma */
   grid-auto-rows: var(--letter-key-size);
 }
-
-/* En fila 3, todas las teclas ocuparán el 100% de la celda */
 .row-3 .key {
   width: 100%;
   height: 100%;
@@ -131,13 +128,12 @@ body {
   align-items: center;
   justify-content: center;
 }
-
-/* El placeholder se hace invisible pero mantiene su tamaño */
+/* El placeholder tiene el mismo tamaño y es invisible */
 .row-3 .key.placeholder {
   visibility: hidden;
 }
 
-/* El botón de Backspace: se extiende a 2 columnas */
+/* El botón de Backspace ocupa 2 columnas en escritorio */
 .row-3 .key.backspace {
   grid-column: span 2;
 }
@@ -145,12 +141,12 @@ body {
 /* ====== Tecla Enter Superior ====== */
 #enter-key-container {
   margin: 0 auto 10px;
-  width: 100%;  /* Ocupa todo el ancho del teclado */
+  width: 100%;
   max-width: 600px;
 }
 #enter-key-container .key {
   width: 100%;
-  height: calc(var(--letter-key-size) * 3);  /* Triple de alto que una tecla normal */
+  height: calc(var(--letter-key-size) * 3); /* Triple de alto */
   background-color: #999;
   border-radius: 5px;
   display: flex;
@@ -161,6 +157,20 @@ body {
   user-select: none;
   font-size: 1rem;
   color: white;
+}
+
+/* ====== Reglas para actualización de colores (con !important) ====== */
+.key.correct {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+.key.present {
+  background-color: #ffeb3b !important;
+  color: black !important;
+}
+.key.absent {
+  background-color: #965050 !important;
+  color: white !important;
 }
 
 /* ====== Botones Generales ====== */
@@ -190,13 +200,23 @@ body {
 
 /* ====== Media Queries para Móviles ====== */
 @media (max-width: 600px) {
-  .button {
-    width: 130px;
-    height: 45px;
-    font-size: 0.9rem;
-    line-height: 45px;
+  /* Ajustar el tamaño base de las teclas en móvil */
+  #keyboard {
+    --letter-key-size: 40px;
   }
-  .cell span {
-    font-size: 1.2rem;
+  /* En móvil, para evitar que el Backspace resulte demasiado grande, lo hacemos que ocupe solo 1 columna */
+  .row-3 .key.backspace {
+    grid-column: span 1;
+  }
+  /* Ajustar tamaño de fuente si es necesario */
+  .row-1 .key,
+  .row-2 .key,
+  .row-3 .key,
+  #enter-key-container .key {
+    font-size: 0.9rem;
+  }
+  /* Para el enter superior, mantenemos el triple de alto */
+  #enter-key-container .key {
+    height: calc(var(--letter-key-size) * 3);
   }
 }
