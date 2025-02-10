@@ -184,7 +184,7 @@ function generateKeyboard() {
   });
   keyboard.appendChild(row2);
   
-  // Fila 3: se genera como grid de 10 celdas
+  // Fila 3: Se genera como grid de 10 celdas
   const row3 = document.createElement("div");
   row3.classList.add("keyboard-row", "row-3");
   
@@ -205,7 +205,7 @@ function generateKeyboard() {
     row3.appendChild(key);
   });
   
-  // Botón de Backspace que ocupa 2 celdas
+  // Botón de Backspace que ocupa 2 celdas (en escritorio; en móvil se ajusta en CSS)
   const backspaceKey = document.createElement("div");
   backspaceKey.classList.add("key", "backspace");
   backspaceKey.textContent = "←";
