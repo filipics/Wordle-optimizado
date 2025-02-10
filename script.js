@@ -18711,7 +18711,7 @@ function generateGrid() {
 function generateKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
-  // Definimos las filas con sus datos:
+  // Definimos las filas y el número de columnas para cada una
   const rows = [
     { letters: "qwertyuiop", className: "row-1" },
     { letters: "asdfghjklñ", className: "row-2" },
@@ -18723,7 +18723,7 @@ function generateKeyboard() {
     rowDiv.classList.add("keyboard-row", rowObj.className);
     
     if (rowObj.className === "row-3") {
-      // En la tercera fila, inserta Backspace, luego las letras, luego Enter
+      // Inserta Backspace al inicio
       const backspaceKey = document.createElement("div");
       backspaceKey.classList.add("key", "special");
       backspaceKey.textContent = "←";
@@ -18731,6 +18731,7 @@ function generateKeyboard() {
       backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
       rowDiv.appendChild(backspaceKey);
       
+      // Agrega las letras de la tercera fila
       for (const letter of rowObj.letters) {
         const key = document.createElement("div");
         key.classList.add("key");
@@ -18741,6 +18742,7 @@ function generateKeyboard() {
         rowDiv.appendChild(key);
       }
       
+      // Inserta Enter al final
       const enterKey = document.createElement("div");
       enterKey.classList.add("key", "special");
       enterKey.textContent = "Enter";
@@ -18748,6 +18750,7 @@ function generateKeyboard() {
       enterKey.addEventListener("click", () => handleKeyPress("enter"));
       rowDiv.appendChild(enterKey);
     } else {
+      // Para las demás filas se generan las teclas de forma habitual
       rowObj.letters.split("").forEach(letter => {
         const key = document.createElement("div");
         key.classList.add("key");
@@ -18762,6 +18765,7 @@ function generateKeyboard() {
     keyboard.appendChild(rowDiv);
   });
 }
+
 
 // ==================== Manejo de Mensajes ====================
 function showMessage(text) {
