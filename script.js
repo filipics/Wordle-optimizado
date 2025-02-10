@@ -18943,6 +18943,3 @@ document.addEventListener("DOMContentLoaded", () => {
   generateKeyboard();
   updateHistoryDisplay();
 });
-  generateKeyboard();
-  updateHistoryDisplay();
-});
