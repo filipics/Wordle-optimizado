@@ -2,7 +2,7 @@
 let currentRow = 0;
 let currentCol = 0;
 let gameOver = false;
-let isDailyMode = false;
+let isDailyMode = false;  // Por defecto, se arranca en modo normal
 const maxAttempts = 6;
 const allowedLetters = "qwertyuiopasdfghjklñzxcvbnm";
 let targetWord = "";
@@ -18708,7 +18708,6 @@ function resetGame() {
 // ==================== Generación del Tablero y Teclado ====================
 function generateGrid() {
   const grid = document.getElementById("grid");
-  // Se asegura que la grid tenga 5 columnas (ya definidas en CSS)
   grid.innerHTML = "";
   for (let i = 0; i < maxAttempts * 5; i++) {
     const cell = document.createElement("div");
@@ -18941,6 +18940,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Inicializar el juego
   selectRandomWord();
   generateGrid();
+  generateKeyboard();
+  updateHistoryDisplay();
+});
   generateKeyboard();
   updateHistoryDisplay();
 });
