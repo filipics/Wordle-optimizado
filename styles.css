@@ -117,7 +117,7 @@ h1 {
   display: flex;
   flex-wrap: nowrap;
   /* Espacio horizontal entre teclas (alternativa a margin en .key) */
-  gap: 8px;
+  gap: 1px;
   /* Si el contenedor es muy estrecho, aparecerá scrollbar horizontal */
   overflow-x: auto;
   justify-content: center;
@@ -143,8 +143,8 @@ h1 {
   */
   flex: 1 1 0;       
   /*min-width: 35px;   /* tamaño mínimo en px */
-  height: 45px;      /* altura fija */
-  line-height: 45px; /* centra verticalmente el texto */
+  height: 50px;      /* altura fija */
+  line-height: 50px; /* centra verticalmente el texto */
   
   transition: background-color 0.2s, transform 0.2s;
 }
