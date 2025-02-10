@@ -61,30 +61,36 @@ body {
 /* ====== Teclado Virtual ====== */
 #keyboard {
   width: 100%;
-  max-width: 600px; /* Limita el ancho máximo para mantener consistencia entre dispositivos */
+  max-width: 600px; /* Para mantener consistencia entre dispositivos */
   margin: 20px auto;
   background-color: #1f1f1f;
   padding: 10px;
   border-radius: 10px;
+  /* Variables para calcular el tamaño de las teclas:
+     Suponemos 10 teclas en la primera fila y un gap de 5px entre ellas */
+  --gap: 5px;
+  --num-keys: 10;
+  --key-height: calc((100% - (var(--num-keys) - 1) * var(--gap)) / var(--num-keys));
 }
 
 .keyboard-row {
   display: flex;
-  gap: 5px;
-  /* Impide que las teclas se envuelvan: se forzará una sola línea */
+  gap: var(--gap);
   flex-wrap: nowrap;
+  justify-content: center;
+  /* Forzamos que todas las filas tengan la misma altura */
+  height: var(--key-height);
 }
 
-/* Todas las teclas de letra tendrán el mismo tamaño */
+/* Todas las teclas de letra tendrán el mismo tamaño y mostrarán texto en mayúscula */
 .key {
-  flex: 1 1 0;
-  margin: 3px 0;
-  /* Las teclas serán cuadradas gracias a aspect-ratio */
-  aspect-ratio: 1;
+  flex: 0 0 var(--key-height);
+  height: 100%;
+  width: var(--key-height);
+  text-transform: uppercase;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* El tamaño de fuente se ajusta de forma relativa */
   font-size: calc(14px + 0.5vw);
   font-weight: bold;
   background-color: #999999;
@@ -93,9 +99,10 @@ body {
   user-select: none;
 }
 
-/* Las teclas especiales serán un poco más grandes */
+/* Las teclas especiales serán un poco más anchas para llenar el espacio */
 .key-special {
-  flex: 1.2 1 0;
+  flex: 0 0 calc(var(--key-height) * 1.2);
+  height: 100%;
 }
 
 /* Reglas para cambiar el color de las teclas según su estado */
@@ -142,8 +149,6 @@ body {
 }
 
 /* ====== Media Queries para Móviles ====== */
-/* Con este enfoque, al reducir o ampliar el ancho del contenedor,
-   las teclas se redimensionan proporcionalmente para ocupar todo el ancho. */
 @media (max-width: 600px) {
   .button {
     width: 130px;
@@ -154,5 +159,5 @@ body {
   .cell {
     font-size: 1.2rem;
   }
-  /* Se mantienen las reglas flexibles para .key en móviles */
+  /* Las reglas para .key se mantienen; la altura se adapta según la variable definida */
 }
