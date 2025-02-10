@@ -18727,7 +18727,7 @@ function generateKeyboard() {
     rowDiv.classList.add("keyboard-row");
     
     if (row === "zxcvbnm") {
-      // Para la tercera fila: insertar Backspace a la izquierda de "z"
+      // Para la tercera fila: insertar Backspace al inicio
       const backspaceKey = document.createElement("div");
       backspaceKey.classList.add("key", "key-special");
       backspaceKey.textContent = "←";
@@ -18735,26 +18735,8 @@ function generateKeyboard() {
       backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
       rowDiv.appendChild(backspaceKey);
       
-      // Crear la tecla para "z"
-      const letterKey = document.createElement("div");
-      letterKey.classList.add("key");
-      letterKey.textContent = "z";
-      letterKey.id = "key-z";
-      letterKey.dataset.status = "unused";
-      letterKey.addEventListener("click", () => handleKeyPress("z"));
-      rowDiv.appendChild(letterKey);
-      
-      // Insertar Enter a la derecha de "z"
-      const enterKey = document.createElement("div");
-      enterKey.classList.add("key", "key-special");
-      enterKey.textContent = "Enter";
-      enterKey.id = "key-enter";
-      enterKey.addEventListener("click", () => handleKeyPress("enter"));
-      rowDiv.appendChild(enterKey);
-      
-      // Agregar el resto de las letras (de "x" en adelante)
-      const remainingLetters = row.slice(1); // "xcvbnm"
-      for (const letter of remainingLetters) {
+      // Agregar las letras de la fila en orden: z, x, c, v, b, n, m
+      for (const letter of row) {
         const key = document.createElement("div");
         key.classList.add("key");
         key.textContent = letter;
@@ -18763,6 +18745,15 @@ function generateKeyboard() {
         key.addEventListener("click", () => handleKeyPress(letter));
         rowDiv.appendChild(key);
       }
+      
+      // Insertar Enter al final de la fila
+      const enterKey = document.createElement("div");
+      enterKey.classList.add("key", "key-special");
+      enterKey.textContent = "Enter";
+      enterKey.id = "key-enter";
+      enterKey.addEventListener("click", () => handleKeyPress("enter"));
+      rowDiv.appendChild(enterKey);
+      
     } else {
       // Para las otras filas se generan las teclas de forma habitual
       row.split("").forEach(letter => {
@@ -18775,6 +18766,7 @@ function generateKeyboard() {
         rowDiv.appendChild(key);
       });
     }
+    
     keyboard.appendChild(rowDiv);
   });
 }
