@@ -7,7 +7,7 @@ const maxAttempts = 6;
 const allowedLetters = "qwertyuiopasdfghjklñzxcvbnm";
 let targetWord = "";
 
-// Prioridad para actualizar el color de las teclas
+// Prioridad para el color de las teclas
 const COLOR_PRIORITY = { unused: 0, absent: 1, present: 2, correct: 3 };
 
 // ==================== Listas de Palabras ====================
@@ -24,16 +24,12 @@ function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
   if (savedGame && savedGame.lastPlayedDate === new Date().toDateString()) {
     currentRow = savedGame.currentRow || 0;
-    // Restaurar el tablero
     const cells = document.querySelectorAll(".cell");
     savedGame.boardState.forEach((cellData, index) => {
       cells[index].innerText = cellData.letter;
       cells[index].classList.remove("correct", "present", "absent");
-      if (cellData.class) {
-        cells[index].classList.add(cellData.class);
-      }
+      if (cellData.class) cells[index].classList.add(cellData.class);
     });
-    // Restaurar el teclado
     const keys = document.querySelectorAll(".key");
     savedGame.keyboardState.forEach(keyData => {
       const keyElement = document.getElementById(`key-${keyData.letter}`);
@@ -153,7 +149,6 @@ function generateGrid() {
 function generateKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
-  // Definir las filas con sus datos
   const rows = [
     { letters: "qwertyuiop", className: "row-1" },
     { letters: "asdfghjklñ", className: "row-2" },
@@ -165,7 +160,6 @@ function generateKeyboard() {
     rowDiv.classList.add("keyboard-row", rowObj.className);
     
     if (rowObj.className === "row-3") {
-      // Inserta Backspace al inicio (tecla especial)
       const backspaceKey = document.createElement("div");
       backspaceKey.classList.add("key", "special");
       backspaceKey.textContent = "←";
@@ -173,7 +167,6 @@ function generateKeyboard() {
       backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
       rowDiv.appendChild(backspaceKey);
       
-      // Agrega las letras de la fila "zxcvbnm"
       for (const letter of rowObj.letters) {
         const key = document.createElement("div");
         key.classList.add("key");
@@ -184,7 +177,6 @@ function generateKeyboard() {
         rowDiv.appendChild(key);
       }
       
-      // Inserta Enter al final (tecla especial)
       const enterKey = document.createElement("div");
       enterKey.classList.add("key", "special");
       enterKey.textContent = "Enter";
@@ -192,7 +184,6 @@ function generateKeyboard() {
       enterKey.addEventListener("click", () => handleKeyPress("enter"));
       rowDiv.appendChild(enterKey);
     } else {
-      // Para las otras filas se generan las teclas de forma habitual
       rowObj.letters.split("").forEach(letter => {
         const key = document.createElement("div");
         key.classList.add("key");
@@ -264,7 +255,6 @@ function processWord(inputWord) {
   }
   let tempCount = { ...letterCount };
   
-  // Primera pasada: letras correctas
   for (let i = 0; i < inputWord.length; i++) {
     let cell = cells[currentRow * 5 + i];
     let letter = inputWord[i];
@@ -276,7 +266,6 @@ function processWord(inputWord) {
     }
   }
   
-  // Segunda pasada: letras presentes o ausentes
   for (let i = 0; i < inputWord.length; i++) {
     let cell = cells[currentRow * 5 + i];
     let letter = inputWord[i];
