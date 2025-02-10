@@ -18578,10 +18578,6 @@ function removeAccents(word) {
 }
 
 // ==================== Modo Diario y Estado ====================
-/*  
-  Carga el estado del juego para el Modo Diario desde localStorage.
-  (Para simplificar se podría guardar solo la palabra del día, pero por ahora se guarda el estado completo).
-*/
 function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
   if (savedGame && savedGame.lastPlayedDate === new Date().toDateString()) {
@@ -18607,7 +18603,6 @@ function loadDailyGameState() {
         }
       }
     });
-    // Si se han usado todos los intentos, se deshabilita el teclado
     if (currentRow >= maxAttempts) {
       disableKeyboard();
       gameOver = true;
@@ -18666,7 +18661,6 @@ function selectRandomWord() {
       if (savedDailyWord && lastPlayedDate === todayDate) {
         targetWord = savedDailyWord;
       } else {
-        // Se genera la palabra del día usando la fecha como "seed"
         const today = new Date();
         const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
         const randomIndex = seed % wordsOfFiveLetters.length;
@@ -18690,7 +18684,6 @@ function validateWord(word) {
 }
 
 function resetGame() {
-  // En modo diario, el botón de reiniciar no debe funcionar
   if (isDailyMode) return;
   
   currentRow = 0;
@@ -18727,7 +18720,7 @@ function generateKeyboard() {
     rowDiv.classList.add("keyboard-row");
     
     if (row === "zxcvbnm") {
-      // Para la tercera fila: insertar Backspace al inicio
+      // Inserta Backspace al inicio
       const backspaceKey = document.createElement("div");
       backspaceKey.classList.add("key", "key-special");
       backspaceKey.textContent = "←";
@@ -18746,7 +18739,7 @@ function generateKeyboard() {
         rowDiv.appendChild(key);
       }
       
-      // Insertar Enter al final de la fila
+      // Inserta Enter al final
       const enterKey = document.createElement("div");
       enterKey.classList.add("key", "key-special");
       enterKey.textContent = "Enter";
@@ -18755,7 +18748,6 @@ function generateKeyboard() {
       rowDiv.appendChild(enterKey);
       
     } else {
-      // Para las otras filas se generan las teclas de forma habitual
       row.split("").forEach(letter => {
         const key = document.createElement("div");
         key.classList.add("key");
@@ -18783,7 +18775,7 @@ function showMessage(text) {
 
 // ==================== Manejo de la Entrada del Usuario ====================
 function handleKeyPress(key) {
-  if (gameOver) return; // No se procesan más entradas si el juego terminó
+  if (gameOver) return;
   key = key.toLowerCase();
   if (key === "enter") {
     if (currentCol === 5) {
@@ -18917,7 +18909,6 @@ function updateHistoryDisplay() {
     historyContainer.innerHTML += "<p>Aún no hay partidas registradas.</p>";
     return;
   }
-  // Mostrar las últimas 10 partidas
   gameHistory.slice(-10).forEach(game => {
     const entry = document.createElement("p");
     entry.textContent = `${game.date}: ${game.word} - ${game.result} en ${game.attempts} intentos`;
@@ -18927,10 +18918,8 @@ function updateHistoryDisplay() {
 
 // ==================== Inicialización ====================
 document.addEventListener("DOMContentLoaded", () => {
-  // Asignar eventos a los botones
   document.getElementById("modeToggle").addEventListener("click", () => {
     isDailyMode = !isDailyMode;
-    // Actualizar el texto del botón según el modo
     document.getElementById("modeToggle").textContent = isDailyMode ? "Modo Diario" : "Modo Normal";
     if (isDailyMode) {
       const savedDailyWord = localStorage.getItem("dailyWord");
@@ -18938,7 +18927,7 @@ document.addEventListener("DOMContentLoaded", () => {
         targetWord = savedDailyWord;
       }
       if (loadDailyGameState()) {
-        return; // Se restauró el juego diario guardado, no se reinicia
+        return;
       }
     }
     selectRandomWord();
@@ -18948,12 +18937,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("reset-game").addEventListener("click", resetGame);
   document.getElementById("toggle-history").addEventListener("click", toggleHistory);
 
-  // Escuchar teclas físicas
   document.addEventListener("keydown", event => {
     handleKeyPress(event.key);
   });
 
-  // Inicializar el juego
   selectRandomWord();
   generateGrid();
   generateKeyboard();
