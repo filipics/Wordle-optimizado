@@ -209,7 +209,7 @@ function generateKeyboard() {
   backspaceKey.textContent = "←";
   backspaceKey.id = "key-backspace";
   backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
-  backspaceKey.style.gridColumn = "span 2";
+ 
   row3.appendChild(backspaceKey);
   
   keyboard.appendChild(row3);
