@@ -24,7 +24,7 @@ function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
   if (savedGame && savedGame.lastPlayedDate === new Date().toDateString()) {
     currentRow = savedGame.currentRow || 0;
-    // Restaurar el estado del tablero
+    // Restaurar el tablero
     const cells = document.querySelectorAll(".cell");
     savedGame.boardState.forEach((cellData, index) => {
       cells[index].innerText = cellData.letter;
@@ -131,8 +131,8 @@ function resetGame() {
   gameOver = false;
   document.getElementById("grid").innerHTML = "";
   document.getElementById("keyboard").innerHTML = "";
-  document.getElementById("message").textContent = "";
-  document.getElementById("reveal-word").textContent = "";
+  document.getElementById("message").innerText = "";
+  document.getElementById("reveal-word").innerText = "";
   generateGrid();
   generateKeyboard();
   selectRandomWord();
@@ -145,7 +145,7 @@ function generateGrid() {
   for (let i = 0; i < maxAttempts * 5; i++) {
     const cell = document.createElement("div");
     cell.classList.add("cell");
-    // Para lograr que la celda sea cuadrada, usamos un <span> que se posiciona absolutamente.
+    // Usamos el método de flex para centrar el contenido:
     const span = document.createElement("span");
     cell.appendChild(span);
     grid.appendChild(cell);
@@ -157,7 +157,7 @@ function generateKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
   
-  // Filas 1 y 2: se generan de forma clásica
+  // Filas 1 y 2 (se generan igual que antes)
   const row1 = document.createElement("div");
   row1.classList.add("keyboard-row", "row-1");
   "qwertyuiop".split("").forEach(letter => {
@@ -184,7 +184,7 @@ function generateKeyboard() {
   });
   keyboard.appendChild(row2);
   
-  // Fila 3: Usamos una cuadrícula de 10 celdas (como en las filas 1 y 2)
+  // Fila 3: Se crea como grid de 10 celdas
   const row3 = document.createElement("div");
   row3.classList.add("keyboard-row", "row-3");
   
@@ -194,7 +194,7 @@ function generateKeyboard() {
   placeholder.textContent = "";
   row3.appendChild(placeholder);
   
-  // 7 celdas para las letras de "zxcvbnm"
+  // 7 celdas: Letras de "zxcvbnm"
   "zxcvbnm".split("").forEach(letter => {
     const key = document.createElement("div");
     key.classList.add("key");
@@ -205,19 +205,18 @@ function generateKeyboard() {
     row3.appendChild(key);
   });
   
-  // Botón de Backspace que ocupará 2 celdas
+  // Última celda: Botón Backspace que ocupa 2 celdas
   const backspaceKey = document.createElement("div");
   backspaceKey.classList.add("key", "backspace");
   backspaceKey.textContent = "←";
   backspaceKey.id = "key-backspace";
   backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
-  // Hace que este elemento se extienda a 2 columnas dentro del grid de 10
   backspaceKey.style.gridColumn = "span 2";
   row3.appendChild(backspaceKey);
   
   keyboard.appendChild(row3);
   
-  // Generar la tecla Enter en el contenedor superior
+  // Generar el botón Enter en el contenedor superior
   generateEnterKey();
 }
 
@@ -236,8 +235,8 @@ function generateEnterKey() {
 function showMessage(text) {
   const msgEl = document.getElementById("message");
   if (!msgEl) return;
-  msgEl.textContent = text;
-  setTimeout(() => { msgEl.textContent = ""; }, 2000);
+  msgEl.innerText = text;
+  setTimeout(() => { msgEl.innerText = ""; }, 2000);
 }
 
 // ==================== Manejo de Entrada del Usuario ====================
@@ -255,20 +254,20 @@ function handleKeyPress(key) {
   if (key === "backspace") {
     if (currentCol > 0) {
       currentCol--;
-      const cells = document.querySelectorAll(".cell");
+      const cells = document.querySelectorAll(".cell span");
       cells[currentRow * 5 + currentCol].innerText = "";
     }
     return;
   }
   if (!allowedLetters.includes(key) || currentCol >= 5) return;
-  const cells = document.querySelectorAll(".cell");
+  const cells = document.querySelectorAll(".cell span");
   cells[currentRow * 5 + currentCol].innerText = key.toUpperCase();
   currentCol++;
 }
 
 function checkWord() {
   let word = "";
-  const cells = document.querySelectorAll(".cell");
+  const cells = document.querySelectorAll(".cell span");
   for (let i = 0; i < 5; i++) {
     word += cells[currentRow * 5 + i].innerText.toLowerCase();
   }
@@ -281,7 +280,7 @@ function checkWord() {
 
 // ==================== Procesamiento de la Palabra ====================
 function processWord(inputWord) {
-  const cells = document.querySelectorAll(".cell");
+  const cells = document.querySelectorAll(".cell span");
   let letterCount = {};
   for (let letter of targetWord) {
     letterCount[letter] = (letterCount[letter] || 0) + 1;
@@ -294,7 +293,7 @@ function processWord(inputWord) {
     let letter = inputWord[i];
     let keyEl = document.getElementById(`key-${letter}`);
     if (letter === targetWord[i]) {
-      cell.classList.add("correct");
+      cell.parentElement.classList.add("correct");
       updateKeyColor(keyEl, "correct");
       tempCount[letter]--;
     }
@@ -305,13 +304,13 @@ function processWord(inputWord) {
     let cell = cells[currentRow * 5 + i];
     let letter = inputWord[i];
     let keyEl = document.getElementById(`key-${letter}`);
-    if (!cell.classList.contains("correct")) {
+    if (!cell.parentElement.classList.contains("correct")) {
       if (targetWord.includes(letter) && tempCount[letter] > 0) {
-        cell.classList.add("present");
+        cell.parentElement.classList.add("present");
         updateKeyColor(keyEl, "present");
         tempCount[letter]--;
       } else {
-        cell.classList.add("absent");
+        cell.parentElement.classList.add("absent");
         updateKeyColor(keyEl, "absent");
       }
     }
