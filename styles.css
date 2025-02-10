@@ -22,7 +22,7 @@ body {
   width: 90%;
   max-width: 400px;
   grid-template-columns: repeat(5, 1fr);
-  background-color: #1f1f1f;
+  background-color: #121212;
   padding: 20px;
   border-radius: 10px;
 }
@@ -61,32 +61,24 @@ body {
 /* ====== Teclado Virtual ====== */
 #keyboard {
   width: 100%;
-  max-width: 600px; /* Mantiene consistencia entre dispositivos */
+  max-width: 600px;
   margin: 20px auto;
-  background-color: #1f1f1f;
+  background-color: #121212;
   padding: 10px;
   border-radius: 10px;
-  /* Definimos las variables:
-     --num-keys: número máximo de teclas en una fila (la primera fila tiene 10 letras)
-     --gap: espacio entre teclas
-     --key-size: tamaño de cada tecla, calculado a partir del ancho disponible */
-  --num-keys: 10;
-  --gap: 5px;
-  --key-size: calc((100% - (var(--num-keys) - 1) * var(--gap)) / var(--num-keys));
 }
 
+/* Cada fila se definirá como un grid; el número de columnas se establecerá desde JS */
 .keyboard-row {
-  display: flex;
-  gap: var(--gap);
-  flex-wrap: nowrap;
-  justify-content: center;
-  /* No forzamos una altura fija aquí; cada tecla tendrá su tamaño basado en --key-size */
+  display: grid;
+  gap: 5px;
+  margin-bottom: 5px;
 }
 
-/* Todas las teclas de letra serán cuadradas y mostrarán el texto en mayúscula */
+/* Todas las teclas (de letra) serán cuadradas y mostrarán su texto en mayúscula */
 .key {
-  width: var(--key-size);
-  height: var(--key-size);
+  width: 100%;
+  aspect-ratio: 1;
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -99,11 +91,7 @@ body {
   user-select: none;
 }
 
-/* Las teclas especiales serán un poco más grandes (20% más) en ambos ejes */
-.key-special {
-  width: calc(var(--key-size) * 1.2);
-  height: calc(var(--key-size) * 1.2);
-}
+/* Las teclas especiales se podrán ajustar mediante grid (se definen en la plantilla de columnas desde JS) */
 
 /* Reglas para cambiar el color de las teclas según su estado */
 .key.correct {
@@ -159,5 +147,4 @@ body {
   .cell {
     font-size: 1.2rem;
   }
-  /* Las reglas para .key se mantienen; el tamaño se recalcula según el ancho del contenedor */
 }
