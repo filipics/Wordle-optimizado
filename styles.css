@@ -29,7 +29,7 @@ body {
 
 .cell {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1/1;
   border: 2px solid white;
   display: flex;
   align-items: center;
@@ -66,26 +66,25 @@ body {
   background-color: #121212;  /* Fondo igual que la página */
   padding: 10px;
   border-radius: 10px;
-  /* Variables para calcular el tamaño de las teclas:
-     Suponemos que la fila con más ítems (filas 1 y 2) tiene 10 teclas.
-     Se define un gap entre teclas. */
+  /* Variables para el tamaño de las teclas:
+     Asumimos que la fila con más ítems (filas 1 y 2) tiene 10 teclas.
+     --gap: espacio entre teclas.
+     --letter-key-size: tamaño de cada tecla (ancho y alto). */
   --gap: 5px;
-  /* Se calcula el tamaño de cada tecla (cuadrada) en función del ancho del contenedor:
-     (ancho total - (10-1)*gap) / 10 */
   --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
 }
 
-/* Cada fila se define como un grid de 10 columnas y forzamos que todas las celdas tengan el mismo alto */
+/* Definimos una cuadrícula de 10 columnas para todas las filas */
 .keyboard-row {
   display: grid;
   gap: var(--gap);
   margin-bottom: var(--gap);
   grid-template-columns: repeat(10, var(--letter-key-size));
-  /* Forzamos que cada celda tenga una altura igual a --letter-key-size */
+  /* Forzamos que cada celda tenga un alto igual a --letter-key-size */
   grid-auto-rows: var(--letter-key-size);
 }
 
-/* Todas las teclas (incluyendo especiales) ocuparán el 100% de la celda y serán cuadradas */
+/* Todas las teclas (incluyendo las especiales) ocuparán el 100% de la celda y serán cuadradas */
 .key {
   width: 100%;
   height: 100%;
@@ -101,7 +100,7 @@ body {
   user-select: none;
 }
 
-/* Opcional: Estilo para el placeholder (lo hacemos invisible) */
+/* El placeholder se hace invisible */
 .key.placeholder {
   visibility: hidden;
 }
@@ -120,6 +119,20 @@ body {
 .key.absent {
   background-color: #965050;
   color: white;
+}
+
+/* ====== Tecla Enter superior ====== */
+#enter-key-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 10px auto;
+}
+
+#enter-key-container .key {
+  /* La misma dimensión que una tecla normal */
+  width: var(--letter-key-size);
+  height: var(--letter-key-size);
+  margin: 0 auto;
 }
 
 /* ====== Botones ====== */
