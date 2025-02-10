@@ -18578,11 +18578,9 @@ function removeAccents(word) {
 }
 
 // ==================== Modo Diario y Estado ====================
-
-/* 
+/*  
   Carga el estado del juego para el Modo Diario desde localStorage.
-  Nota: Para simplificar aún más el modo diario se podría guardar solo la palabra del día,
-  omitiendo el estado completo del tablero y del teclado.
+  (Para simplificar se podría guardar solo la palabra del día, pero por ahora se guarda el estado completo).
 */
 function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
@@ -18609,7 +18607,7 @@ function loadDailyGameState() {
         }
       }
     });
-    // Si se ha alcanzado el número máximo de intentos, deshabilitar el teclado
+    // Si se han usado todos los intentos, se deshabilita el teclado
     if (currentRow >= maxAttempts) {
       disableKeyboard();
       gameOver = true;
@@ -18692,6 +18690,9 @@ function validateWord(word) {
 }
 
 function resetGame() {
+  // En modo diario, el botón de reiniciar no debe funcionar
+  if (isDailyMode) return;
+  
   currentRow = 0;
   currentCol = 0;
   gameOver = false;
@@ -18707,8 +18708,7 @@ function resetGame() {
 // ==================== Generación del Tablero y Teclado ====================
 function generateGrid() {
   const grid = document.getElementById("grid");
-  // Se asegura que la grid tenga 5 columnas
-  grid.style.gridTemplateColumns = `repeat(5, 1fr)`;
+  // Se asegura que la grid tenga 5 columnas (ya definidas en CSS)
   grid.innerHTML = "";
   for (let i = 0; i < maxAttempts * 5; i++) {
     const cell = document.createElement("div");
@@ -18826,7 +18826,7 @@ function processWord(inputWord) {
     }
   }
 
-  // Segunda pasada: letras presentes (amarillo) o ausentes (gris)
+  // Segunda pasada: letras presentes o ausentes
   for (let i = 0; i < inputWord.length; i++) {
     let cell = gridCells[currentRow * 5 + i];
     let letter = inputWord[i];
@@ -18915,6 +18915,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Asignar eventos a los botones
   document.getElementById("modeToggle").addEventListener("click", () => {
     isDailyMode = !isDailyMode;
+    // Actualizar el texto del botón según el modo
     document.getElementById("modeToggle").textContent = isDailyMode ? "Modo Diario" : "Modo Normal";
     if (isDailyMode) {
       const savedDailyWord = localStorage.getItem("dailyWord");
