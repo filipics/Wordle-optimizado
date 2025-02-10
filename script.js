@@ -24,7 +24,6 @@ function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
   if (savedGame && savedGame.lastPlayedDate === new Date().toDateString()) {
     currentRow = savedGame.currentRow || 0;
-    // Restaurar estado del tablero
     const cells = document.querySelectorAll(".cell span");
     savedGame.boardState.forEach((cellData, index) => {
       cells[index].innerText = cellData.letter;
@@ -33,7 +32,6 @@ function loadDailyGameState() {
         cells[index].parentElement.classList.add(cellData.class);
       }
     });
-    // Restaurar estado del teclado
     const keys = document.querySelectorAll(".key");
     savedGame.keyboardState.forEach(keyData => {
       const keyElement = document.getElementById(`key-${keyData.letter}`);
@@ -184,7 +182,7 @@ function generateKeyboard() {
   });
   keyboard.appendChild(row2);
   
-  // Fila 3: Grid de 10 celdas
+  // Fila 3: se genera como grid de 10 celdas
   const row3 = document.createElement("div");
   row3.classList.add("keyboard-row", "row-3");
   
@@ -205,7 +203,7 @@ function generateKeyboard() {
     row3.appendChild(key);
   });
   
-  // Botón de Backspace (ocupa 2 celdas en escritorio; se ajusta en móvil)
+  // Botón de Backspace que ocupa 2 celdas (en escritorio; en móvil se ajusta)
   const backspaceKey = document.createElement("div");
   backspaceKey.classList.add("key", "backspace");
   backspaceKey.textContent = "←";
