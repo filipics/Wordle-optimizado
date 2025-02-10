@@ -1,145 +1,140 @@
+/* ====== Estilos Globales ====== */
 body {
-    font-family: 'Arial', sans-serif;
-    text-align: center;
-    background-color: #121212;
-    color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #121212;
+  color: white;
+  margin: 0;
+  padding: 20px;
 }
 
-header {
-    background-color: #1f1f1f;
-    padding: 20px;
-    font-size: 24px;
-    font-weight: bold;
+/* ====== Historial ====== */
+#history {
+  display: none; /* Se oculta por defecto */
+  margin-top: 10px;
 }
 
+/* ====== Tablero de Juego ====== */
 #grid {
-    display: grid;
-    gap: 10px;
-    margin: 20px auto;
-    justify-content: center;
-    background-color: #1f1f1f;
-    padding: 20px;
-    border-radius: 10px;
+  display: grid;
+  gap: 10px;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 400px;
+  grid-template-columns: repeat(5, 1fr);
+  background-color: #1f1f1f;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .cell {
-    width: 60px;
-    height: 60px;
-    border: 2px solid white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
-    text-transform: uppercase;
-    background-color: #2c2c2c;
-    color: white;
-    border-radius: 5px;
-    cursor: text;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #2c2c2c;
+  color: white;
+  border-radius: 5px;
 }
 
-.cell.selected {
-    border: 2px solid yellow;
+/* Estados de las celdas */
+.correct {
+  background-color: #4caf50;
+  color: white;
 }
 
-.correct { background-color: #4caf50 !important; color: white !important; }
-.present { background-color: #ffeb3b !important; color: black !important; }
-.absent { background-color: #965050 !important; color: white !important; }
+.present {
+  background-color: #ffeb3b;
+  color: black;
+}
 
+.absent {
+  background-color: #965050;
+  color: white;
+}
 
+/* ====== Teclado Virtual ====== */
 #keyboard {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 1px;
-    background-color: #1f1f1f;
-    padding: 10px;
-    border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 400px;
+  background-color: #1f1f1f;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .keyboard-row {
-    display: flex;
-    justify-content: center;
-    gap: 0px;
-    margin-bottom: 0px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+  flex-wrap: wrap; /* Permite ajustar las teclas si el ancho es reducido */
 }
 
 .key {
-    display: inline-block;
-    width: 50px;
-    height: 60px;   
-    margin: 1px;
-    text-align: center;
-    line-height: 40px;
-    font-size: 24px;
-    font-weight: bold;
-    background-color: #999999;
-    border-radius: 5px;
-    cursor: pointer;
-    user-select: none;
+  flex: 1 1 auto;
+  margin: 2px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-color: #999999;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px;
 }
 
 .key-special {
-    width: 80px; /* Enter y Backspace más grandes */
+  flex: 1 1 20%;
 }
 
+/* ====== Botones ====== */
 .button {
-    width: 150px;
-    height: 50px;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    line-height: 50px;
-    cursor: pointer;
-    border-radius: 8px;
-    border: none;
-    background-color: #222;
-    color: white;
-    margin: 5px;
-    transition: background-color 0.3s, transform 0.2s;
+  width: 150px;
+  height: 50px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  line-height: 50px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: none;
+  background-color: #222;
+  color: white;
+  margin: 5px;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-
-/* 📌 Efecto de presionado */
 .button:active {
-    background-color: #555;
-    transform: scale(0.95);
+  background-color: #555;
+  transform: scale(0.95);
 }
 
-/* 📌 Efecto de hover */
 .button:hover {
-    background-color: #444;
-    transform: scale(1.05);
+  background-color: #444;
+  transform: scale(1.05);
 }
 
-/* 📌 Media queries para móviles */
+/* ====== Media Queries para Móviles ====== */
 @media (max-width: 600px) {
-    #game-container {
-        width: 95%;
-    }
-
-    .button {
-        width: 130px;
-        height: 45px;
-        font-size: 16px;
-        line-height: 45px;
-    }
-
-    .cell {
-        width: 60px;
-        height: 60px;
-        font-size: 20px;
-        line-height: 40px;
-    }
-
-    .key {
-        width: 40px;
-        height: 50px;
-        font-size: 16px;
-        line-height: 40px;
-    }
-
-    .key-special {
-        width: 60px;
-    }
+  .button {
+    width: 130px;
+    height: 45px;
+    font-size: 0.9rem;
+    line-height: 45px;
+  }
+  .cell {
+    font-size: 1.2rem;
+  }
+  .key {
+    font-size: 1.2rem;
+    padding: 8px;
+  }
 }
