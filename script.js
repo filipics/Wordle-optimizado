@@ -24,13 +24,13 @@ function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
   if (savedGame && savedGame.lastPlayedDate === new Date().toDateString()) {
     currentRow = savedGame.currentRow || 0;
-    // Restaurar el tablero
-    const cells = document.querySelectorAll(".cell");
+    // Restaurar el estado del tablero
+    const cells = document.querySelectorAll(".cell span");
     savedGame.boardState.forEach((cellData, index) => {
       cells[index].innerText = cellData.letter;
-      cells[index].classList.remove("correct", "present", "absent");
+      cells[index].parentElement.classList.remove("correct", "present", "absent");
       if (cellData.class) {
-        cells[index].classList.add(cellData.class);
+        cells[index].parentElement.classList.add(cellData.class);
       }
     });
     // Restaurar el estado del teclado
@@ -56,14 +56,14 @@ function loadDailyGameState() {
 
 function saveDailyGameState() {
   if (isDailyMode) {
-    const cells = document.querySelectorAll(".cell");
+    const cells = document.querySelectorAll(".cell span");
     const boardState = Array.from(cells).map(cell => ({
       letter: cell.innerText,
-      class: cell.classList.contains("correct")
+      class: cell.parentElement.classList.contains("correct")
         ? "correct"
-        : cell.classList.contains("present")
+        : cell.parentElement.classList.contains("present")
         ? "present"
-        : cell.classList.contains("absent")
+        : cell.parentElement.classList.contains("absent")
         ? "absent"
         : ""
     }));
@@ -145,7 +145,6 @@ function generateGrid() {
   for (let i = 0; i < maxAttempts * 5; i++) {
     const cell = document.createElement("div");
     cell.classList.add("cell");
-    // Usamos el método de flex para centrar el contenido:
     const span = document.createElement("span");
     cell.appendChild(span);
     grid.appendChild(cell);
@@ -157,7 +156,7 @@ function generateKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
   
-  // Filas 1 y 2 (se generan igual que antes)
+  // Fila 1
   const row1 = document.createElement("div");
   row1.classList.add("keyboard-row", "row-1");
   "qwertyuiop".split("").forEach(letter => {
@@ -171,6 +170,7 @@ function generateKeyboard() {
   });
   keyboard.appendChild(row1);
   
+  // Fila 2
   const row2 = document.createElement("div");
   row2.classList.add("keyboard-row", "row-2");
   "asdfghjklñ".split("").forEach(letter => {
@@ -205,7 +205,7 @@ function generateKeyboard() {
     row3.appendChild(key);
   });
   
-  // Última celda: Botón Backspace que ocupa 2 celdas
+  // Botón de Backspace que ocupará 2 celdas
   const backspaceKey = document.createElement("div");
   backspaceKey.classList.add("key", "backspace");
   backspaceKey.textContent = "←";
@@ -216,7 +216,7 @@ function generateKeyboard() {
   
   keyboard.appendChild(row3);
   
-  // Generar el botón Enter en el contenedor superior
+  // Generar la tecla Enter en el contenedor superior
   generateEnterKey();
 }
 
