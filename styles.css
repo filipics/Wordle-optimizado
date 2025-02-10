@@ -22,12 +22,12 @@ body {
   margin: 20px auto;
   width: 90%;
   max-width: 400px;
-  background-color: #121212; /* Igual que la página */
+  background-color: #121212;
   padding: 20px;
   border-radius: 10px;
 }
 
-/* Técnica de “padding-top” para lograr celdas cuadradas */
+/* Técnica para celdas cuadradas del tablero */
 .cell {
   position: relative;
   background-color: #2c2c2c;
@@ -58,7 +58,7 @@ body {
   width: 100%;
   max-width: 600px;
   margin: 20px auto;
-  background-color: #121212; /* Igual que la página */
+  background-color: #121212;
   padding: 10px;
   border-radius: 10px;
   /* Variables para el tamaño de las teclas */
@@ -69,7 +69,7 @@ body {
   min-height: calc(3 * var(--letter-key-size) + 2 * var(--gap));
 }
 
-/* Para las filas 1 y 2 usamos flex (como estaban originalmente) */
+/* Filas 1 y 2: Usamos flex */
 .keyboard-row {
   margin-bottom: var(--gap);
 }
@@ -78,7 +78,8 @@ body {
   justify-content: center;
   gap: var(--gap);
 }
-.row-1 .key, .row-2 .key {
+.row-1 .key,
+.row-2 .key {
   width: var(--letter-key-size);
   height: var(--letter-key-size);
   background-color: #999;
@@ -91,9 +92,10 @@ body {
   user-select: none;
   font-size: 1rem;
   color: white;
+  aspect-ratio: 1;
 }
 
-/* Fila 3 se genera con CSS Grid para tener 10 celdas iguales */
+/* Fila 3: Usamos grid para 10 celdas iguales */
 .row-3 {
   display: grid;
   grid-template-columns: repeat(10, var(--letter-key-size));
@@ -114,14 +116,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  aspect-ratio: 1;
 }
-
-/* El placeholder de la fila 3: invisible pero con mismo tamaño */
+/* Placeholder invisible pero del mismo tamaño */
 .row-3 .key.placeholder {
   visibility: hidden;
 }
-
-/* El botón de Backspace: en escritorio ocupa 2 celdas */
+/* Backspace: en escritorio, ocupa 2 celdas; en móvil, se ajusta a 1 (en media query) */
 .row-3 .key.backspace {
   grid-column: span 2;
 }
@@ -145,9 +146,10 @@ body {
   cursor: pointer;
   user-select: none;
   font-size: 1rem;
+  /* Para el enter, no forzamos aspect-ratio, pues ya se le asignó la altura deseada */
 }
 
-/* ====== Reglas para Actualizar Colores (forzadas) ====== */
+/* ====== Reglas para Colores de Teclas (forzadas) ====== */
 .key.correct {
   background-color: #4caf50 !important;
   color: white !important;
@@ -191,7 +193,7 @@ body {
   #keyboard {
     --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
   }
-  /* En móvil, para que el Backspace no sea excesivamente ancho, lo hacemos ocupar solo 1 celda */
+  /* En móvil, hacer que Backspace ocupe 1 celda */
   .row-3 .key.backspace {
     grid-column: span 1;
   }
