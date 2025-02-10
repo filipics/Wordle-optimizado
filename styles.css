@@ -75,16 +75,16 @@ body {
   flex-wrap: nowrap;
 }
 
-/* Se eliminan dimensiones fijas y se usan valores flexibles */
+/* Se usan propiedades flexibles para que el teclado se adapte al ancho del contenedor */
 .key {
   flex: 1 1 0;
   margin: 3px 0;
-  /* Hace que cada tecla sea cuadrada, adaptándose al ancho disponible */
+  /* Las teclas serán cuadradas gracias a aspect-ratio */
   aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* El tamaño de fuente se ajusta de forma relativa al ancho */
+  /* El tamaño de fuente se ajusta de forma relativa */
   font-size: calc(14px + 0.5vw);
   font-weight: bold;
   background-color: #999999;
@@ -93,7 +93,7 @@ body {
   user-select: none;
 }
 
-/* Para las teclas especiales, se puede asignar un factor de flex mayor */
+/* Para las teclas especiales, se asigna un factor de flex ligeramente mayor */
 .key-special {
   flex: 1.2 1 0;
 }
@@ -154,5 +154,5 @@ body {
   .cell {
     font-size: 1.2rem;
   }
-  /* No se definen tamaños fijos para .key en móviles; se mantienen las reglas flexibles */
+  /* Se mantienen las reglas flexibles para .key en móviles */
 }
