@@ -29,7 +29,7 @@ body {
 
 .cell {
   width: 100%;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1 / 1;
   border: 2px solid white;
   display: flex;
   align-items: center;
@@ -67,36 +67,28 @@ body {
   padding: 10px;
   border-radius: 10px;
   /* Variables para calcular el tamaño de las teclas:
-     Suponemos que la primera fila tiene 10 teclas y se respeta un gap entre ellas */
+     Suponemos que la fila con más ítems (filas 1 y 2) tiene 10 teclas.
+     Se define un gap entre teclas. */
   --gap: 5px;
+  /* Se calcula el tamaño de cada tecla (cuadrada) en función del ancho del contenedor:
+     (ancho total - (10-1)*gap) / 10 */
   --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
-  /* Las teclas especiales serán 1.2 veces más anchas */
-  --special-size: calc(var(--letter-key-size) * 1.2);
 }
 
-/* Cada fila se define como un grid con altura fija igual a --letter-key-size */
+/* Cada fila se define como un grid de 10 columnas y forzamos que todas las celdas tengan el mismo alto */
 .keyboard-row {
   display: grid;
   gap: var(--gap);
   margin-bottom: var(--gap);
+  grid-template-columns: repeat(10, var(--letter-key-size));
+  /* Forzamos que cada celda tenga una altura igual a --letter-key-size */
   grid-auto-rows: var(--letter-key-size);
 }
 
-/* Para la primera y segunda fila: 10 columnas de tamaño --letter-key-size */
-.keyboard-row.row-1,
-.keyboard-row.row-2 {
-  grid-template-columns: repeat(10, var(--letter-key-size));
-}
-
-/* Para la tercera fila: Backspace, 7 letras y Enter */
-.keyboard-row.row-3 {
-  grid-template-columns: var(--special-size) repeat(7, var(--letter-key-size)) var(--special-size);
-}
-
-/* Todas las teclas de letra: se forzan a ocupar el 100% de la celda y ser cuadradas */
+/* Todas las teclas (incluyendo especiales) ocuparán el 100% de la celda y serán cuadradas */
 .key {
   width: 100%;
-  aspect-ratio: 1;
+  height: 100%;
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -109,13 +101,9 @@ body {
   user-select: none;
 }
 
-/* Para las teclas especiales (Backspace y Enter):
-   Se elimina el aspect-ratio para que no se fuerce a ser cuadradas,
-   pero se fuerza el alto al 100% de la celda (lo que es igual a --letter-key-size),
-   de modo que tengan el mismo alto que las teclas de letra. */
-.key.special {
-  aspect-ratio: unset;
-  height: 100%;
+/* Opcional: Estilo para el placeholder (lo hacemos invisible) */
+.key.placeholder {
+  visibility: hidden;
 }
 
 /* Reglas para cambiar el color de las teclas según su estado */
