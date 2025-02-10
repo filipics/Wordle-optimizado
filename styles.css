@@ -75,7 +75,7 @@ body {
   flex-wrap: nowrap;
 }
 
-/* Se usan propiedades flexibles para que el teclado se adapte al ancho del contenedor */
+/* Todas las teclas de letra tendrán el mismo tamaño */
 .key {
   flex: 1 1 0;
   margin: 3px 0;
@@ -93,7 +93,7 @@ body {
   user-select: none;
 }
 
-/* Para las teclas especiales, se asigna un factor de flex ligeramente mayor */
+/* Las teclas especiales serán un poco más grandes */
 .key-special {
   flex: 1.2 1 0;
 }
