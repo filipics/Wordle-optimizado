@@ -18728,7 +18728,7 @@ function generateKeyboard() {
       backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
       rowDiv.appendChild(backspaceKey);
       
-      // Agregar las letras de la fila en orden: z, x, c, v, b, n, m
+      // Genera las teclas de la fila (z, x, c, v, b, n, m)
       for (const letter of row) {
         const key = document.createElement("div");
         key.classList.add("key");
@@ -18748,6 +18748,7 @@ function generateKeyboard() {
       rowDiv.appendChild(enterKey);
       
     } else {
+      // Para las demás filas se generan las teclas de forma habitual
       row.split("").forEach(letter => {
         const key = document.createElement("div");
         key.classList.add("key");
@@ -18762,6 +18763,7 @@ function generateKeyboard() {
     keyboard.appendChild(rowDiv);
   });
 }
+
 
 // ==================== Manejo de Mensajes ====================
 function showMessage(text) {
