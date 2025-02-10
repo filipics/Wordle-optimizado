@@ -18713,13 +18713,19 @@ function generateGrid() {
 function generateKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
-  const rows = ["qwertyuiop", "asdfghjklñ", "zxcvbnm"];
+  const rows = [
+    { letters: "qwertyuiop", columns: "repeat(10, 1fr)" },
+    { letters: "asdfghjklñ", columns: "repeat(10, 1fr)" },
+    // Para la tercera fila: queremos 9 columnas con Backspace y Enter un 20% más grandes
+    { letters: "zxcvbnm", columns: "1.2fr repeat(7, 1fr) 1.2fr" }
+  ];
   
-  rows.forEach(row => {
+  rows.forEach(rowObj => {
     const rowDiv = document.createElement("div");
     rowDiv.classList.add("keyboard-row");
+    rowDiv.style.gridTemplateColumns = rowObj.columns;
     
-    if (row === "zxcvbnm") {
+    if (rowObj.letters === "zxcvbnm") {
       // Inserta Backspace al inicio
       const backspaceKey = document.createElement("div");
       backspaceKey.classList.add("key", "key-special");
@@ -18728,8 +18734,8 @@ function generateKeyboard() {
       backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
       rowDiv.appendChild(backspaceKey);
       
-      // Genera las teclas de la fila (z, x, c, v, b, n, m)
-      for (const letter of row) {
+      // Agrega las letras de la tercera fila
+      for (const letter of rowObj.letters) {
         const key = document.createElement("div");
         key.classList.add("key");
         key.textContent = letter;
@@ -18748,8 +18754,8 @@ function generateKeyboard() {
       rowDiv.appendChild(enterKey);
       
     } else {
-      // Para las demás filas se generan las teclas de forma habitual
-      row.split("").forEach(letter => {
+      // Para las filas restantes se generan las teclas normalmente
+      rowObj.letters.split("").forEach(letter => {
         const key = document.createElement("div");
         key.classList.add("key");
         key.textContent = letter;
@@ -18763,7 +18769,6 @@ function generateKeyboard() {
     keyboard.appendChild(rowDiv);
   });
 }
-
 
 // ==================== Manejo de Mensajes ====================
 function showMessage(text) {
