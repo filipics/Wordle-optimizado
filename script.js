@@ -18582,7 +18582,7 @@ function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
   if (savedGame && savedGame.lastPlayedDate === new Date().toDateString()) {
     currentRow = savedGame.currentRow || 0;
-    // Restaurar el estado del tablero
+    // Restaurar el tablero
     const cells = document.querySelectorAll(".cell");
     savedGame.boardState.forEach((cellData, index) => {
       cells[index].innerText = cellData.letter;
@@ -18591,7 +18591,7 @@ function loadDailyGameState() {
         cells[index].classList.add(cellData.class);
       }
     });
-    // Restaurar el estado del teclado
+    // Restaurar el teclado
     const keys = document.querySelectorAll(".key");
     savedGame.keyboardState.forEach(keyData => {
       const keyElement = document.getElementById(`key-${keyData.letter}`);
@@ -18652,25 +18652,24 @@ function disableKeyboard() {
 
 // ==================== Selección de Palabra ====================
 function selectRandomWord() {
-  const wordsOfFiveLetters = wordSelectionList.filter(word => word.length === 5);
-  if (wordsOfFiveLetters.length > 0) {
+  const words = wordSelectionList.filter(word => word.length === 5);
+  if (words.length > 0) {
     if (isDailyMode) {
-      const savedDailyWord = localStorage.getItem("dailyWord");
-      const lastPlayedDate = localStorage.getItem("lastPlayedDate");
-      const todayDate = new Date().toDateString();
-      if (savedDailyWord && lastPlayedDate === todayDate) {
-        targetWord = savedDailyWord;
+      const savedWord = localStorage.getItem("dailyWord");
+      const lastDate = localStorage.getItem("lastPlayedDate");
+      if (savedWord && lastDate === new Date().toDateString()) {
+        targetWord = savedWord;
       } else {
         const today = new Date();
         const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-        const randomIndex = seed % wordsOfFiveLetters.length;
-        targetWord = wordsOfFiveLetters[randomIndex];
+        const index = seed % words.length;
+        targetWord = words[index];
         localStorage.setItem("dailyWord", targetWord);
-        localStorage.setItem("lastPlayedDate", todayDate);
+        localStorage.setItem("lastPlayedDate", new Date().toDateString());
       }
     } else {
-      const randomIndex = Math.floor(Math.random() * wordsOfFiveLetters.length);
-      targetWord = wordsOfFiveLetters[randomIndex];
+      const index = Math.floor(Math.random() * words.length);
+      targetWord = words[index];
     }
   } else {
     console.error("No hay palabras de 5 letras en la lista.");
@@ -18685,7 +18684,6 @@ function validateWord(word) {
 
 function resetGame() {
   if (isDailyMode) return;
-  
   currentRow = 0;
   currentCol = 0;
   gameOver = false;
@@ -18713,28 +18711,26 @@ function generateGrid() {
 function generateKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
+  // Definimos las filas con sus datos:
   const rows = [
-    { letters: "qwertyuiop", columns: "repeat(10, 1fr)" },
-    { letters: "asdfghjklñ", columns: "repeat(10, 1fr)" },
-    // Para la tercera fila: queremos 9 columnas con Backspace y Enter un 20% más grandes
-    { letters: "zxcvbnm", columns: "1.2fr repeat(7, 1fr) 1.2fr" }
+    { letters: "qwertyuiop", className: "row-1" },
+    { letters: "asdfghjklñ", className: "row-2" },
+    { letters: "zxcvbnm", className: "row-3" }
   ];
   
   rows.forEach(rowObj => {
     const rowDiv = document.createElement("div");
-    rowDiv.classList.add("keyboard-row");
-    rowDiv.style.gridTemplateColumns = rowObj.columns;
+    rowDiv.classList.add("keyboard-row", rowObj.className);
     
-    if (rowObj.letters === "zxcvbnm") {
-      // Inserta Backspace al inicio
+    if (rowObj.className === "row-3") {
+      // En la tercera fila, inserta Backspace, luego las letras, luego Enter
       const backspaceKey = document.createElement("div");
-      backspaceKey.classList.add("key", "key-special");
+      backspaceKey.classList.add("key", "special");
       backspaceKey.textContent = "←";
       backspaceKey.id = "key-backspace";
       backspaceKey.addEventListener("click", () => handleKeyPress("backspace"));
       rowDiv.appendChild(backspaceKey);
       
-      // Agrega las letras de la tercera fila
       for (const letter of rowObj.letters) {
         const key = document.createElement("div");
         key.classList.add("key");
@@ -18745,16 +18741,13 @@ function generateKeyboard() {
         rowDiv.appendChild(key);
       }
       
-      // Inserta Enter al final
       const enterKey = document.createElement("div");
-      enterKey.classList.add("key", "key-special");
+      enterKey.classList.add("key", "special");
       enterKey.textContent = "Enter";
       enterKey.id = "key-enter";
       enterKey.addEventListener("click", () => handleKeyPress("enter"));
       rowDiv.appendChild(enterKey);
-      
     } else {
-      // Para las filas restantes se generan las teclas normalmente
       rowObj.letters.split("").forEach(letter => {
         const key = document.createElement("div");
         key.classList.add("key");
@@ -18772,15 +18765,13 @@ function generateKeyboard() {
 
 // ==================== Manejo de Mensajes ====================
 function showMessage(text) {
-  const messageElement = document.getElementById("message");
-  if (!messageElement) return;
-  messageElement.textContent = text;
-  setTimeout(() => {
-    messageElement.textContent = "";
-  }, 2000);
+  const msgEl = document.getElementById("message");
+  if (!msgEl) return;
+  msgEl.textContent = text;
+  setTimeout(() => { msgEl.textContent = ""; }, 2000);
 }
 
-// ==================== Manejo de la Entrada del Usuario ====================
+// ==================== Manejo de Entrada del Usuario ====================
 function handleKeyPress(key) {
   if (gameOver) return;
   key = key.toLowerCase();
@@ -18807,56 +18798,56 @@ function handleKeyPress(key) {
 }
 
 function checkWord() {
-  let inputWord = "";
-  const gridCells = document.querySelectorAll(".cell");
+  let word = "";
+  const cells = document.querySelectorAll(".cell");
   for (let i = 0; i < 5; i++) {
-    inputWord += gridCells[currentRow * 5 + i].textContent.toLowerCase();
+    word += cells[currentRow * 5 + i].textContent.toLowerCase();
   }
-  if (!validateWord(inputWord)) {
+  if (!validateWord(word)) {
     showMessage("❌ Esa palabra no está en la DRAE.");
     return;
   }
-  processWord(inputWord);
+  processWord(word);
 }
 
 // ==================== Procesamiento de la Palabra ====================
 function processWord(inputWord) {
-  const gridCells = document.querySelectorAll(".cell");
+  const cells = document.querySelectorAll(".cell");
   let letterCount = {};
   for (let letter of targetWord) {
     letterCount[letter] = (letterCount[letter] || 0) + 1;
   }
-  let tempLetterCount = { ...letterCount };
-
-  // Primera pasada: letras correctas
+  let tempCount = { ...letterCount };
+  
+  // Primera pasada: correctas
   for (let i = 0; i < inputWord.length; i++) {
-    let cell = gridCells[currentRow * 5 + i];
+    let cell = cells[currentRow * 5 + i];
     let letter = inputWord[i];
-    let keyElement = document.getElementById(`key-${letter}`);
+    let keyEl = document.getElementById(`key-${letter}`);
     if (letter === targetWord[i]) {
       cell.classList.add("correct");
-      updateKeyColor(keyElement, "correct");
-      tempLetterCount[letter]--;
+      updateKeyColor(keyEl, "correct");
+      tempCount[letter]--;
     }
   }
-
-  // Segunda pasada: letras presentes o ausentes
+  
+  // Segunda pasada: presentes o ausentes
   for (let i = 0; i < inputWord.length; i++) {
-    let cell = gridCells[currentRow * 5 + i];
+    let cell = cells[currentRow * 5 + i];
     let letter = inputWord[i];
-    let keyElement = document.getElementById(`key-${letter}`);
+    let keyEl = document.getElementById(`key-${letter}`);
     if (!cell.classList.contains("correct")) {
-      if (targetWord.includes(letter) && tempLetterCount[letter] > 0) {
+      if (targetWord.includes(letter) && tempCount[letter] > 0) {
         cell.classList.add("present");
-        updateKeyColor(keyElement, "present");
-        tempLetterCount[letter]--;
+        updateKeyColor(keyEl, "present");
+        tempCount[letter]--;
       } else {
         cell.classList.add("absent");
-        updateKeyColor(keyElement, "absent");
+        updateKeyColor(keyEl, "absent");
       }
     }
   }
-
+  
   if (inputWord === targetWord) {
     showMessage("🎉 ¡Ganaste!");
     saveGameResult(true, currentRow + 1);
@@ -18875,8 +18866,8 @@ function processWord(inputWord) {
 
 function updateKeyColor(key, newStatus) {
   if (!key) return;
-  let currentStatus = key.dataset.status || "unused";
-  if (COLOR_PRIORITY[newStatus] > COLOR_PRIORITY[currentStatus]) {
+  let currStatus = key.dataset.status || "unused";
+  if (COLOR_PRIORITY[newStatus] > COLOR_PRIORITY[currStatus]) {
     key.classList.remove("correct", "present", "absent", "unused");
     key.classList.add(newStatus);
     key.dataset.status = newStatus;
@@ -18885,41 +18876,41 @@ function updateKeyColor(key, newStatus) {
 
 // ==================== Registro y Visualización del Historial ====================
 function saveGameResult(won, attempts) {
-  let gameHistory = JSON.parse(localStorage.getItem("gameHistory")) || [];
-  let gameRecord = {
+  let history = JSON.parse(localStorage.getItem("gameHistory")) || [];
+  let record = {
     date: new Date().toLocaleDateString(),
     word: targetWord,
     attempts: won ? attempts : maxAttempts,
     result: won ? "Ganó" : "Perdió"
   };
-  gameHistory.push(gameRecord);
-  localStorage.setItem("gameHistory", JSON.stringify(gameHistory));
+  history.push(record);
+  localStorage.setItem("gameHistory", JSON.stringify(history));
   updateHistoryDisplay();
 }
 
 function toggleHistory() {
-  const historyContainer = document.getElementById("history");
-  if (historyContainer.style.display === "none" || historyContainer.style.display === "") {
-    historyContainer.style.display = "block";
+  const histEl = document.getElementById("history");
+  if (histEl.style.display === "none" || histEl.style.display === "") {
+    histEl.style.display = "block";
     updateHistoryDisplay();
   } else {
-    historyContainer.style.display = "none";
+    histEl.style.display = "none";
   }
 }
 
 function updateHistoryDisplay() {
-  const historyContainer = document.getElementById("history");
-  if (!historyContainer) return;
-  let gameHistory = JSON.parse(localStorage.getItem("gameHistory")) || [];
-  historyContainer.innerHTML = "<h3>Historial de Partidas</h3>";
-  if (gameHistory.length === 0) {
-    historyContainer.innerHTML += "<p>Aún no hay partidas registradas.</p>";
+  const histEl = document.getElementById("history");
+  if (!histEl) return;
+  let history = JSON.parse(localStorage.getItem("gameHistory")) || [];
+  histEl.innerHTML = "<h3>Historial de Partidas</h3>";
+  if (history.length === 0) {
+    histEl.innerHTML += "<p>Aún no hay partidas registradas.</p>";
     return;
   }
-  gameHistory.slice(-10).forEach(game => {
+  history.slice(-10).forEach(game => {
     const entry = document.createElement("p");
     entry.textContent = `${game.date}: ${game.word} - ${game.result} en ${game.attempts} intentos`;
-    historyContainer.appendChild(entry);
+    histEl.appendChild(entry);
   });
 }
 
@@ -18929,25 +18920,21 @@ document.addEventListener("DOMContentLoaded", () => {
     isDailyMode = !isDailyMode;
     document.getElementById("modeToggle").textContent = isDailyMode ? "Modo Diario" : "Modo Normal";
     if (isDailyMode) {
-      const savedDailyWord = localStorage.getItem("dailyWord");
-      if (savedDailyWord) {
-        targetWord = savedDailyWord;
-      }
-      if (loadDailyGameState()) {
-        return;
-      }
+      const savedWord = localStorage.getItem("dailyWord");
+      if (savedWord) { targetWord = savedWord; }
+      if (loadDailyGameState()) return;
     }
     selectRandomWord();
     resetGame();
   });
-
+  
   document.getElementById("reset-game").addEventListener("click", resetGame);
   document.getElementById("toggle-history").addEventListener("click", toggleHistory);
-
+  
   document.addEventListener("keydown", event => {
     handleKeyPress(event.key);
   });
-
+  
   selectRandomWord();
   generateGrid();
   generateKeyboard();
