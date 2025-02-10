@@ -22,155 +22,156 @@ body {
   width: 90%;
   max-width: 400px;
   grid-template-columns: repeat(5, 1fr);
-  background-color: #121212;  /* Fondo igual que la página */
+  background-color: #121212;
   padding: 20px;
   border-radius: 10px;
 }
-
 .cell {
-  width: 100%;
-  aspect-ratio: 1/1;
+  background-color: #2c2c2c;
   border: 2px solid white;
+  border-radius: 5px;
+  position: relative;
+  /* Técnica para que la celda sea cuadrada: */
+  width: 100%;
+  height: 0;
+  padding-top: 100%;
+}
+.cell span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
   font-weight: bold;
   text-transform: uppercase;
-  background-color: #2c2c2c;
-  color: white;
-  border-radius: 5px;
 }
 
 /* Estados de las celdas */
-.correct {
-  background-color: #4caf50;
-  color: white;
-}
-
-.present {
-  background-color: #ffeb3b;
-  color: black;
-}
-
-.absent {
-  background-color: #965050;
-  color: white;
-}
+.correct { background-color: #4caf50; color: white; }
+.present { background-color: #ffeb3b; color: black; }
+.absent { background-color: #965050; color: white; }
 
 /* ====== Teclado Virtual ====== */
 #keyboard {
   width: 100%;
   max-width: 600px;
   margin: 20px auto;
-  background-color: #121212;  /* Fondo igual que la página */
+  background-color: #121212;
   padding: 10px;
   border-radius: 10px;
-  /* Variables para el tamaño de las teclas:
-     Asumimos que la fila con más ítems (filas 1 y 2) tiene 10 teclas.
-     --gap: espacio entre teclas.
-     --letter-key-size: tamaño de cada tecla (ancho y alto). */
-  --gap: 5px;
-  --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
+  /* Variable base: tamaño de cada tecla (en filas 1 y 2, por ejemplo 50px) */
+  --letter-key-size: 50px;
 }
 
-/* Definimos una cuadrícula de 10 columnas para todas las filas */
 .keyboard-row {
-  display: grid;
-  gap: var(--gap);
-  margin-bottom: var(--gap);
-  grid-template-columns: repeat(10, var(--letter-key-size));
-  /* Forzamos que cada celda tenga un alto igual a --letter-key-size */
-  grid-auto-rows: var(--letter-key-size);
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 5px;
 }
 
-/* Todas las teclas (incluyendo las especiales) ocuparán el 100% de la celda y serán cuadradas */
-.key {
-  width: 100%;
-  height: 100%;
-  text-transform: uppercase;
+/* Filas 1 y 2 (no se modifican) */
+.row-1 .key,
+.row-2 .key {
+  background-color: #999;
+  border-radius: 5px;
+  width: var(--letter-key-size);
+  height: var(--letter-key-size);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(14px + 0.5vw);
-  font-weight: bold;
-  background-color: #999999;
-  border-radius: 5px;
+  text-transform: uppercase;
   cursor: pointer;
   user-select: none;
+  font-size: 1rem;
+  color: white;
 }
 
-/* El placeholder se hace invisible */
-.key.placeholder {
+/* Fila 3: se usa CSS Grid para tener 10 celdas iguales */
+.keyboard-row.row-3 {
+  display: grid;
+  grid-template-columns: repeat(10, var(--letter-key-size));
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+/* En fila 3, todas las celdas tendrán ancho y alto igual a --letter-key-size */
+.row-3 .key {
+  width: 100%;
+  height: 100%;
+  background-color: #999;
+  border-radius: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1rem;
+  color: white;
+  /* Para centrar el contenido, usamos un <span> (lo agregamos en el JS) */
+  position: relative;
+}
+.row-3 .key span {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* El placeholder de la fila 3 se hace invisible */
+.row-3 .key.placeholder {
   visibility: hidden;
 }
 
-/* Reglas para cambiar el color de las teclas según su estado */
-.key.correct {
-  background-color: #4caf50;
-  color: white;
+/* El botón de Backspace se va a extender 2 columnas */
+.row-3 .key.backspace {
+  grid-column: span 2;
 }
 
-.key.present {
-  background-color: #ffeb3b;
-  color: black;
-}
-
-.key.absent {
-  background-color: #965050;
-  color: white;
-}
-
-/* ====== Tecla Enter superior ====== */
+/* ====== Tecla Enter (superior) ====== */
 #enter-key-container {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto 10px auto;
-}
-
-#enter-key-container .key {
-  /* La misma dimensión que una tecla normal */
+  margin: 0 auto 10px;
   width: var(--letter-key-size);
   height: var(--letter-key-size);
-  margin: 0 auto;
+}
+#enter-key-container .key {
+  background-color: #999;
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1rem;
+  color: white;
 }
 
-/* ====== Botones ====== */
+/* ====== Botones generales ====== */
 .button {
   width: 150px;
   height: 50px;
   font-size: 1rem;
   font-weight: bold;
-  text-align: center;
-  line-height: 50px;
-  cursor: pointer;
-  border-radius: 8px;
-  border: none;
   background-color: #222;
   color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
   margin: 5px;
+  line-height: 50px;
   transition: background-color 0.3s, transform 0.2s;
 }
+.button:active { background-color: #555; transform: scale(0.95); }
+.button:hover { background-color: #444; transform: scale(1.05); }
 
-.button:active {
-  background-color: #555;
-  transform: scale(0.95);
-}
-
-.button:hover {
-  background-color: #444;
-  transform: scale(1.05);
-}
-
-/* ====== Media Queries para Móviles ====== */
+/* ====== Media Queries ====== */
 @media (max-width: 600px) {
-  .button {
-    width: 130px;
-    height: 45px;
-    font-size: 0.9rem;
-    line-height: 45px;
-  }
-  .cell {
-    font-size: 1.2rem;
-  }
+  .button { width: 130px; height: 45px; font-size: 0.9rem; line-height: 45px; }
+  .cell span { font-size: 1.2rem; }
 }
