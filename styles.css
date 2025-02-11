@@ -19,7 +19,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* ========== Botón Genérico ========== */
+/* Botón Genérico */
 .button {
   width: 120px;
   height: 45px;
@@ -42,7 +42,7 @@ h1 {
   transform: scale(0.95);
 }
 
-/* ========== Mensajes ========== */
+/* Mensajes */
 #message {
   min-height: 1.5em;
   margin: 10px 0;
@@ -50,6 +50,15 @@ h1 {
 }
 #reveal-word {
   margin-top: 5px;
+}
+
+/* Historial */
+#history {
+  margin: 10px auto;
+  max-width: 600px;
+  padding: 10px;
+  background-color: #222;
+  border-radius: 5px;
 }
 
 /* ========== Tablero (6 filas x 5 columnas) ========== */
@@ -60,8 +69,12 @@ h1 {
   width: 90%;
   max-width: 400px;
   margin: 0 auto 30px auto;
+  background-color: #121212;
+  padding: 20px;
+  border-radius: 10px;
 }
 
+/* Celdas del tablero: técnicas para celdas cuadradas */
 .cell {
   position: relative;
   background-color: #2c2c2c;
@@ -69,9 +82,8 @@ h1 {
   border-radius: 5px;
   width: 100%;
   height: 0;
-  padding-top: 100%; /* Para celdas cuadradas */
+  padding-top: 100%;
 }
-
 .cell span {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -83,99 +95,107 @@ h1 {
   text-transform: uppercase;
 }
 
-/* ========== Colores de celdas: correct, present, absent ========== */
-.correct {
-  background-color: #4caf50;
-  color: white;
-}
-.present {
-  background-color: #ffeb3b;
-  color: black;
-}
-.absent {
-  background-color: #965050;
-  color: white;
-}
+/* Estados de las celdas */
+.correct { background-color: #4caf50; color: white; }
+.present { background-color: #ffeb3b; color: black; }
+.absent  { background-color: #965050; color: white; }
 
-/* ========== Contenedor principal del teclado ========== */
+/* ========== Teclado Virtual ========== */
 #keyboard {
   width: 100%;
-  max-width: none;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  /* Le ponemos un borde para visualizar el área */
-  border: none;
-  padding: 0;
-  box-sizing: border-box;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #121212;
+  padding: 10px;
+  border-radius: 10px;
+  /* Variables para el tamaño de las teclas (responsive) */
+  --gap: 5px;
+  --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
+}
+#keyboard {
+  min-height: calc(3 * var(--letter-key-size) + 2 * var(--gap));
 }
 
-/* ========== Cada fila del teclado ========== */
-.row {
+/* Filas 1 y 2: Se generan con Flex (sin cambios) */
+.row.row-1,
+.row.row-2 {
   display: flex;
   flex-wrap: nowrap;
-  gap: 1px;
-
-  /* Mantener scroll horizontal */
+  gap: var(--gap);
   overflow-x: hidden;
-
-  /* Ocultar el scroll vertical */
   overflow-y: hidden;
-
-  /* Centrar las teclas verticalmente 
-     (asegúrate de que .key no exceda la altura)
-  */
   align-items: center;
-
-  /* Opcional: forzar altura si sigue apareciendo el scroll vertical
-     height: 50px; 
-  */
   justify-content: center;
+  height: var(--letter-key-size);
 }
-
-/* ========== Teclas ========== */
-.key {
+.row.row-1 .key,
+.row.row-2 .key {
+  flex: 1 1 0;
+  height: 100%;
+  line-height: var(--letter-key-size);
   background-color: #999;
   color: #fff;
-  border-radius: 0px;
   font-size: 1rem;
   text-transform: uppercase;
-  text-align: center;
   cursor: pointer;
   user-select: none;
-  
-  /* 
-    flex: 1 1 0 
-    => "1" permite crecer si hay espacio,
-       "1" permite encogerse si no hay tanto espacio, 
-       "0" como base de cálculo de anchura.
-    Con min-width podemos controlar el límite mínimo.
-  */
-  flex: 1 1 0;       
-  /*min-width: 35px;   /* tamaño mínimo en px */
-  height: 50px;      /* altura fija */
-  line-height: 50px; /* centra verticalmente el texto */
-  
   transition: background-color 0.2s, transform 0.2s;
 }
 
-/*.key:hover {
-  background-color: #444;
-  transform: scale(1.05);
+/* Fila 3: Se genera con CSS Grid para tener 10 celdas iguales */
+.row.row-3 {
+  display: grid;
+  grid-template-columns: repeat(10, var(--letter-key-size));
+  gap: var(--gap);
+  overflow-x: hidden;
+  overflow-y: hidden;
+  align-items: center;
+  height: var(--letter-key-size);
 }
-.key:active {
-  background-color: #555;
-  transform: scale(0.95);
+.row.row-3 .key {
+  background-color: #999;
+  color: #fff;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  line-height: var(--letter-key-size);
+  /* Forzamos que sean cuadradas */
+  aspect-ratio: 1;
+}
+/* El placeholder en fila 3: Invisible pero conserva tamaño */
+.row.row-3 .key.placeholder {
+  visibility: hidden;
+}
+/* Botón de Backspace: En escritorio, ocupa 2 celdas; en móvil se ajusta */
+.row.row-3 .key.backspace {
+  grid-column: span 2;
 }
 
-/* Tecla con icono especial */
-/*.key.backspace::before {
-  content: "⌫";
+/* ========== Tecla Enter Superior ========== */
+#enter-key-container {
+  margin: 0 auto 10px;
+  width: 100%;
+  max-width: 600px;
 }
-/* Si prefieres usar textContent, lo cambias desde JS */
+#enter-key-container .key {
+  background-color: #999;
+  color: #fff;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+  height: calc(var(--letter-key-size) * 3); /* Triple de alto */
+  line-height: calc(var(--letter-key-size) * 3);
+  border-radius: 0;
+}
 
-/* Colores cuando la tecla se marca */
+/* ========== Reglas para Actualizar Colores de Teclas ========== */
 .key.correct {
   background-color: #4caf50 !important;
   color: white !important;
@@ -189,10 +209,25 @@ h1 {
   color: white !important;
 }
 
-/* ========== Responsivo ========== */
+/* ========== Botones Generales ========== */
+/* (Ya definidos arriba con .button) */
+
+/* ========== Media Queries para Móviles ========== */
 @media (max-width: 600px) {
-  .key {
+  #keyboard {
+    --letter-key-size: calc((100% - 9 * var(--gap)) / 10);
+  }
+  .row.row-1, .row.row-2, .row.row-3 {
+    height: var(--letter-key-size);
+  }
+  .row.row-3 .key.backspace {
+    grid-column: span 1;
+  }
+  .row.row-1 .key, .row.row-2 .key, .row.row-3 .key, #enter-key-container .key {
     font-size: 0.9rem;
-    /*min-width: 30px;  /* puede reducir un poco en móvil */
+  }
+  #enter-key-container .key {
+    height: calc(var(--letter-key-size) * 3);
+    line-height: calc(var(--letter-key-size) * 3);
   }
 }
