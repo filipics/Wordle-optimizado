@@ -6,12 +6,12 @@
 let currentRow = 0;
 let currentCol = 0;
 let gameOver = false;
-let isDailyMode = false; // Modo normal por defecto
+let isDailyMode = false; // Por defecto, Modo Normal
 const maxAttempts = 6;
 const allowedLetters = "qwertyuiopasdfghjklñzxcvbnm";
 let targetWord = "";
 
-// Prioridad para actualizar el color de las teclas
+/* Prioridad para actualizar el color de las teclas */
 const COLOR_PRIORITY = { unused: 0, absent: 1, present: 2, correct: 3 };
 
 /* ==================== Listas de Palabras ==================== */
@@ -28,7 +28,7 @@ function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
   if (savedGame && savedGame.lastPlayedDate === new Date().toDateString()) {
     currentRow = savedGame.currentRow || 0;
-    // Restaurar el tablero
+    // Restaurar tablero
     const cells = document.querySelectorAll(".cell span");
     savedGame.boardState.forEach((cellData, index) => {
       cells[index].innerText = cellData.letter;
@@ -37,7 +37,7 @@ function loadDailyGameState() {
         cells[index].parentElement.classList.add(cellData.class);
       }
     });
-    // Restaurar el teclado
+    // Restaurar teclado
     const keys = document.querySelectorAll(".key");
     savedGame.keyboardState.forEach(keyData => {
       const keyElement = document.getElementById("key-" + keyData.letter);
@@ -182,7 +182,7 @@ function generateGrid() {
   }
 }
 
-/* ==================== Generar Teclado ==================== */
+/* ==================== Generación del Teclado ==================== */
 function generateKeyboard() {
   // Se asume que en el HTML existen tres contenedores con clases "row row-1", "row row-2" y "row row-3"
   const row1Container = document.querySelector(".row.row-1");
@@ -236,7 +236,8 @@ function createKey(letter, container, isPlaceholder = false, isBackspace = false
 }
 
 function generateEnterKey() {
-  // Insertar la tecla Enter en un contenedor superior.
+  // Si se desea que el Enter se muestre en otro lugar, se puede generar aquí.
+  // Por ejemplo, para mostrarlo encima del tablero, lo insertamos en un contenedor
   let container = document.getElementById("enter-key-container");
   if (!container) {
     container = document.createElement("div");
@@ -280,7 +281,6 @@ function handleKeyPress(key) {
   }
 }
 
-/* ==================== Validar y Procesar Palabra ==================== */
 function checkWord() {
   const cells = document.querySelectorAll(".cell span");
   let word = "";
@@ -302,7 +302,7 @@ function processWord(inputWord) {
   }
   let tempCount = { ...letterCount };
   
-  // Primera pasada: correctas
+  // Primera pasada: marcar correctas
   for (let i = 0; i < inputWord.length; i++) {
     const letter = inputWord[i];
     if (letter === targetWord[i]) {
@@ -312,7 +312,7 @@ function processWord(inputWord) {
     }
   }
   
-  // Segunda pasada: presentes o ausentes
+  // Segunda pasada: marcar presentes o ausentes
   for (let i = 0; i < inputWord.length; i++) {
     const letter = inputWord[i];
     const cellDiv = cells[currentRow * 5 + i].parentElement;
@@ -331,16 +331,16 @@ function processWord(inputWord) {
   if (inputWord === targetWord) {
     showMessage("¡Ganaste!");
     revealWord("La palabra era: " + targetWord.toUpperCase());
-    gameOver = true;
     saveGameResult(true, currentRow + 1);
+    gameOver = true;
     return;
   }
   
   if (currentRow === maxAttempts - 1) {
     showMessage("¡Se acabaron los intentos!");
     revealWord("La palabra era: " + targetWord.toUpperCase());
-    gameOver = true;
     saveGameResult(false, currentRow + 1);
+    gameOver = true;
     return;
   }
   
@@ -403,7 +403,7 @@ function updateHistoryDisplay() {
 function resetGame() {
   selectRandomWord();
   generateGrid();
-  // Reiniciar colores de las teclas
+  // Reiniciar colores de teclas
   document.querySelectorAll(".key").forEach(k => {
     k.classList.remove("correct", "present", "absent");
   });
@@ -411,30 +411,29 @@ function resetGame() {
 
 /* ==================== Inicialización ==================== */
 document.addEventListener("DOMContentLoaded", () => {
-  // Insertar el botón de Modo Diario/Modo Normal si no existe
-  if (!document.getElementById("modeToggle")) {
-    const modeToggle = document.createElement("button");
-    modeToggle.id = "modeToggle";
-    modeToggle.classList.add("button");
-    modeToggle.innerText = "Modo Normal";
-    document.body.insertBefore(modeToggle, document.getElementById("grid"));
-    modeToggle.addEventListener("click", () => {
-      isDailyMode = !isDailyMode;
-      modeToggle.innerText = isDailyMode ? "Modo Diario" : "Modo Normal";
-      if (isDailyMode) {
-        const savedWord = localStorage.getItem("dailyWord");
-        if (savedWord) { targetWord = savedWord; }
-        if (loadDailyGameState()) return;
-      }
-      selectRandomWord();
-      resetGame();
-    });
-  }
+  // Los botones ya están en el HTML (en #top-buttons)
+  document.getElementById("modeToggle").addEventListener("click", () => {
+    isDailyMode = !isDailyMode;
+    document.getElementById("modeToggle").innerText = isDailyMode ? "Modo Diario" : "Modo Normal";
+    if (isDailyMode) {
+      const savedWord = localStorage.getItem("dailyWord");
+      if (savedWord) { targetWord = savedWord; }
+      if (loadDailyGameState()) return;
+    }
+    selectRandomWord();
+    resetGame();
+  });
   
-  // Evento para el botón de reiniciar
   document.getElementById("reset-game").addEventListener("click", resetGame);
+  document.getElementById("toggle-history").addEventListener("click", () => {
+    const histEl = document.getElementById("history");
+    if (histEl.style.display === "none" || histEl.style.display === "") {
+      histEl.style.display = "block";
+    } else {
+      histEl.style.display = "none";
+    }
+  });
   
-  // Evento para teclado físico
   document.addEventListener("keydown", (event) => {
     handleKeyPress(event.key);
   });
