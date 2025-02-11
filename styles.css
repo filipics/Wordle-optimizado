@@ -67,19 +67,20 @@ h1 {
   border-radius: 5px;
 }
 
-/* ========== Tablero (6 filas x 5 columnas) ========== */
+/* ========== Tablero (6x5) ========== */
 #grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   width: 90%;
   max-width: 400px;
-  margin: 0 auto 30px auto;
+  margin: 0 auto 30px;
   background-color: #121212;
   padding: 20px;
   border-radius: 10px;
 }
 
+/* Celdas cuadradas del tablero */
 .cell {
   position: relative;
   background-color: #2c2c2c;
@@ -87,9 +88,8 @@ h1 {
   border-radius: 5px;
   width: 100%;
   height: 0;
-  padding-top: 100%; /* Celdas cuadradas */
+  padding-top: 100%; /* Forzar celda cuadrada */
 }
-
 .cell span {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -114,11 +114,11 @@ h1 {
   background-color: #121212;
   padding: 10px;
   border-radius: 10px;
-  /* Mantenemos el estilo original: las teclas tienen 50px de alto */
+  /* Para mantener el estilo original, usamos altura fija de 50px para cada fila */
 }
 
 .row {
-  /* Para filas 1 y 2 usamos flex (sin cambio) */
+  /* Filas 1 y 2: se generan con flex */
   display: flex;
   flex-wrap: nowrap;
   gap: 1px;
@@ -143,7 +143,7 @@ h1 {
   transition: background-color 0.2s, transform 0.2s;
 }
 
-/* Fila 3: se genera con CSS Grid para tener 10 celdas iguales */
+/* Fila 3: se genera con CSS Grid para forzar 10 celdas iguales */
 .row.row-3 {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
@@ -162,11 +162,11 @@ h1 {
   cursor: pointer;
   user-select: none;
   transition: background-color 0.2s, transform 0.2s;
-  /* Forzar que la celda tenga forma cuadrada en grid (aunque ya lo controla el contenedor) */
-  /* Si se produce "achatamiento", revisar el contenedor del grid. */
+  /* Forzamos que sean cuadradas si fuera posible */
+  /* Nota: dado que usamos una grilla de 10 columnas y la altura de la fila es 50px, se mantendrán cuadradas */
 }
 
-/* El placeholder en la fila 3: invisible pero con el mismo tamaño */
+/* El placeholder en la fila 3: Invisible pero con el mismo tamaño */
 .row.row-3 .key.placeholder {
   visibility: hidden;
 }
@@ -174,6 +174,25 @@ h1 {
 /* El botón de Backspace: en escritorio ocupa 2 celdas; en móvil se ajusta */
 .row.row-3 .key.backspace {
   grid-column: span 2;
+}
+
+/* ========== Tecla Enter Superior ========== */
+#enter-key-container {
+  margin: 0 auto 10px;
+  width: 100%;
+  max-width: 600px;
+}
+#enter-key-container .key {
+  width: 100%;
+  height: calc(50px * 3);  /* Triple de alto (150px) */
+  line-height: calc(50px * 3);
+  background-color: #999;
+  color: #fff;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0;
 }
 
 /* ========== Reglas para Actualizar Colores de Teclas ========== */
@@ -192,16 +211,8 @@ h1 {
 
 /* ========== Media Queries para Móviles ========== */
 @media (max-width: 600px) {
-  .row {
-    height: 50px;
-  }
-  /* En móvil, para que el Backspace no sea demasiado ancho */
-  .row.row-3 .key.backspace {
-    grid-column: span 1;
-  }
-  .key {
-    font-size: 0.9rem;
-  }
+  .row { height: 50px; }
+  .key { font-size: 0.9rem; }
+  .row.row-3 .key.backspace { grid-column: span 1; }
+  #enter-key-container .key { height: calc(50px * 3); line-height: calc(50px * 3); }
 }
-
-/* (Opcional: si ves que las teclas en la fila 3 se "achatan", asegúrate de que el contenedor del grid tenga el ancho completo) */
