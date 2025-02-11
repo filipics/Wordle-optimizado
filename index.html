@@ -9,13 +9,13 @@
 <body>
   <h1>Wordle (Teclado en filas sin salto)</h1>
   
-  <!-- Botón para alternar Modo Diario / Modo Normal -->
+  <!-- Botón para alternar Modo Diario / Modo Normal (se inserta dinámicamente si no existe) -->
   <button id="modeToggle" class="button">Modo Normal</button>
   
   <!-- Contenedor para el historial -->
   <div id="history"></div>
   
-  <!-- Tablero de ejemplo (6 filas x 5 columnas) -->
+  <!-- Tablero (6 filas x 5 columnas) -->
   <div id="grid"></div>
   
   <!-- Contenedor principal del teclado -->
@@ -32,7 +32,7 @@
   <p id="message"></p>
   <p id="reveal-word"></p>
   
-  <!-- Botón para reiniciar la partida -->
+  <!-- Botón para reiniciar -->
   <button id="reset-game" class="button">Reiniciar</button>
   
   <script src="script.js"></script>
