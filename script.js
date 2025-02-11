@@ -28,7 +28,7 @@ function loadDailyGameState() {
   const savedGame = JSON.parse(localStorage.getItem("dailyGameState"));
   if (savedGame && savedGame.lastPlayedDate === new Date().toDateString()) {
     currentRow = savedGame.currentRow || 0;
-    // Restaurar tablero
+    // Restaurar el tablero
     const cells = document.querySelectorAll(".cell span");
     savedGame.boardState.forEach((cellData, index) => {
       cells[index].innerText = cellData.letter;
@@ -37,7 +37,7 @@ function loadDailyGameState() {
         cells[index].parentElement.classList.add(cellData.class);
       }
     });
-    // Restaurar teclado
+    // Restaurar el teclado
     const keys = document.querySelectorAll(".key");
     savedGame.keyboardState.forEach(keyData => {
       const keyElement = document.getElementById("key-" + keyData.letter);
@@ -213,6 +213,9 @@ function generateKeyboard() {
   });
   // Última celda: Botón de Backspace (ocupando 2 celdas en escritorio)
   createKey("backspace", row3Container, false, true);
+  
+  // Generar la tecla Enter en el contenedor superior
+  generateEnterKey();
 }
 
 function createKey(letter, container, isPlaceholder = false, isBackspace = false) {
@@ -224,7 +227,7 @@ function createKey(letter, container, isPlaceholder = false, isBackspace = false
   } else if (isBackspace) {
     keyDiv.classList.add("backspace");
     keyDiv.textContent = "⌫";
-    keyDiv.style.gridColumn = "span 2";
+    keyDiv.style.gridColumn = "span 2"; // En escritorio, ocupa 2 celdas
     keyDiv.addEventListener("click", () => handleKeyPress("backspace"));
   } else {
     keyDiv.textContent = letter;
@@ -236,8 +239,7 @@ function createKey(letter, container, isPlaceholder = false, isBackspace = false
 }
 
 function generateEnterKey() {
-  // Si se desea que el Enter se muestre en otro lugar, se puede generar aquí.
-  // Por ejemplo, para mostrarlo encima del tablero, lo insertamos en un contenedor
+  // Insertar la tecla Enter en un contenedor superior.
   let container = document.getElementById("enter-key-container");
   if (!container) {
     container = document.createElement("div");
@@ -312,7 +314,7 @@ function processWord(inputWord) {
     }
   }
   
-  // Segunda pasada: marcar presentes o ausentes
+  // Segunda pasada: marcar presentes/ausentes
   for (let i = 0; i < inputWord.length; i++) {
     const letter = inputWord[i];
     const cellDiv = cells[currentRow * 5 + i].parentElement;
@@ -411,7 +413,7 @@ function resetGame() {
 
 /* ==================== Inicialización ==================== */
 document.addEventListener("DOMContentLoaded", () => {
-  // Los botones ya están en el HTML (en #top-buttons)
+  // Agregar eventos a los botones del contenedor superior
   document.getElementById("modeToggle").addEventListener("click", () => {
     isDailyMode = !isDailyMode;
     document.getElementById("modeToggle").innerText = isDailyMode ? "Modo Diario" : "Modo Normal";
@@ -427,13 +429,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("reset-game").addEventListener("click", resetGame);
   document.getElementById("toggle-history").addEventListener("click", () => {
     const histEl = document.getElementById("history");
-    if (histEl.style.display === "none" || histEl.style.display === "") {
-      histEl.style.display = "block";
-    } else {
-      histEl.style.display = "none";
-    }
+    histEl.style.display = (histEl.style.display === "none" || histEl.style.display === "") ? "block" : "none";
   });
   
+  // Manejo de teclado físico
   document.addEventListener("keydown", (event) => {
     handleKeyPress(event.key);
   });
