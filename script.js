@@ -75,7 +75,7 @@ function generateKeyboard() {
   // Filas de letras
   const row1 = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"];
   const row2 = ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ñ"];
-  const row3 = ["z", "x", "c", "v", "b", "n", "m", "backspace", "enter"];
+  const row3 = ["enter", "z", "x", "c", "v", "b", "n", "m", "backspace"];
 
   // Limpiamos cada fila
   document.querySelector(".row-1").innerHTML = "";

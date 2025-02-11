@@ -100,7 +100,7 @@ h1 {
 /* ========== Contenedor principal del teclado ========== */
 #keyboard {
   width: 100%;
-  max-width: 600px;
+  max-width: none;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -113,13 +113,24 @@ h1 {
 
 /* ========== Cada fila del teclado ========== */
 .row {
-  /* Forzamos que todo quede en 1 línea */
   display: flex;
   flex-wrap: nowrap;
-  /* Espacio horizontal entre teclas (alternativa a margin en .key) */
   gap: 1px;
-  /* Si el contenedor es muy estrecho, aparecerá scrollbar horizontal */
-  overflow-x: auto;
+
+  /* Mantener scroll horizontal */
+  overflow-x: hidden;
+
+  /* Ocultar el scroll vertical */
+  overflow-y: hidden;
+
+  /* Centrar las teclas verticalmente 
+     (asegúrate de que .key no exceda la altura)
+  */
+  align-items: center;
+
+  /* Opcional: forzar altura si sigue apareciendo el scroll vertical
+     height: 50px; 
+  */
   justify-content: center;
 }
 
@@ -149,7 +160,7 @@ h1 {
   transition: background-color 0.2s, transform 0.2s;
 }
 
-.key:hover {
+/*.key:hover {
   background-color: #444;
   transform: scale(1.05);
 }
@@ -159,7 +170,7 @@ h1 {
 }
 
 /* Tecla con icono especial */
-.key.backspace::before {
+/*.key.backspace::before {
   content: "⌫";
 }
 /* Si prefieres usar textContent, lo cambias desde JS */
