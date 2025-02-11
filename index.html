@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wordle Adaptable en una sola línea</title>
-  <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <h1>Wordle (Teclado en filas sin salto)</h1>
@@ -16,13 +16,16 @@
     <button id="reset-game" class="button">Reiniciar</button>
   </div>
   
-  <!-- Contenedor para el historial (oculto por defecto) -->
+  <!-- Contenedor para el historial (inicialmente oculto) -->
   <div id="history"></div>
   
-  <!-- Tablero (6 filas x 5 columnas) -->
+  <!-- Contenedor para la tecla Enter superior -->
+  <div id="enter-key-container"></div>
+  
+  <!-- Tablero de juego (6 filas x 5 columnas) -->
   <div id="grid"></div>
   
-  <!-- Contenedor principal del teclado (3 filas) -->
+  <!-- Teclado virtual: 3 filas -->
   <div id="keyboard">
     <div class="row row-1"></div>
     <div class="row row-2"></div>
