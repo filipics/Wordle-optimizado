@@ -18,6 +18,14 @@ h1 {
   margin-bottom: 20px;
 }
 
+/* Contenedor de botones superior */
+#top-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
 /* ========== Botón Genérico ========== */
 .button {
   width: 120px;
@@ -28,7 +36,6 @@ h1 {
   border: none;
   background-color: #222;
   color: white;
-  margin: 10px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
 }
@@ -100,21 +107,18 @@ h1 {
 .absent  { background-color: #965050; color: white; }
 
 /* ========== Teclado Virtual ========== */
-/* Usamos el mismo alto que tu código original: 50px por tecla */
 #keyboard {
   width: 100%;
-  max-width: none;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  border: none;
-  padding: 0;
-  box-sizing: border-box;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #121212;
+  padding: 10px;
+  border-radius: 10px;
+  /* Mantenemos el estilo original: las teclas tienen 50px de alto */
 }
 
-/* Cada fila del teclado */
 .row {
+  /* Para filas 1 y 2 usamos flex (sin cambio) */
   display: flex;
   flex-wrap: nowrap;
   gap: 1px;
@@ -122,59 +126,82 @@ h1 {
   overflow-y: hidden;
   align-items: center;
   justify-content: center;
-  height: 50px; /* altura fija para filas 1 y 2 */
+  height: 50px;
 }
 
-/* Teclas: se definen con flex para distribuir el ancho igual */
-.key {
-  background-color: #999;
-  color: #fff;
-  border-radius: 0;
-  font-size: 1rem;
-  text-transform: uppercase;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
+.row.row-1 .key,
+.row.row-2 .key {
   flex: 1 1 0;
   height: 50px;
   line-height: 50px;
+  background-color: #999;
+  color: #fff;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
   transition: background-color 0.2s, transform 0.2s;
 }
 
-/* Colores al marcar */
-.key.correct { background-color: #4caf50 !important; color: white !important; }
-.key.present { background-color: #ffeb3b !important; color: black !important; }
-.key.absent { background-color: #965050 !important; color: white !important; }
-
-/* ========== Distribución de la Fila 3 ========== */
-/* En tu código original, la fila 3 se generaba igual que las otras. Ahora la adaptamos:
-   La fila 3 la crearemos como grid de 10 celdas iguales para lograr teclas cuadradas.
-*/
-.row-3 {
+/* Fila 3: se genera con CSS Grid para tener 10 celdas iguales */
+.row.row-3 {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   gap: 1px;
-  height: 50px; /* la misma altura que las otras filas */
+  overflow: hidden;
+  height: 50px;
 }
-.row-3 .key {
-  /* Cada celda se ajusta automáticamente, y las teclas ocupan el 100% del contenedor */
+.row.row-3 .key {
   width: 100%;
   height: 100%;
   line-height: 50px;
+  background-color: #999;
+  color: #fff;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s, transform 0.2s;
+  /* Forzar que la celda tenga forma cuadrada en grid (aunque ya lo controla el contenedor) */
+  /* Si se produce "achatamiento", revisar el contenedor del grid. */
 }
 
-/* El placeholder en la fila 3 debe tener el mismo ancho que una tecla */
-.row-3 .key.placeholder {
+/* El placeholder en la fila 3: invisible pero con el mismo tamaño */
+.row.row-3 .key.placeholder {
   visibility: hidden;
 }
 
-/* Para el botón de Backspace, en la fila 3 se extiende para ocupar 2 celdas en escritorio */
-.row-3 .key.backspace {
+/* El botón de Backspace: en escritorio ocupa 2 celdas; en móvil se ajusta */
+.row.row-3 .key.backspace {
   grid-column: span 2;
 }
 
-/* ========== Responsivo ========== */
-@media (max-width: 600px) {
-  .key { font-size: 0.9rem; }
-  /* En móvil, podrías ajustar la altura si es necesario; por ejemplo, mantener 50px o reducir ligeramente */
+/* ========== Reglas para Actualizar Colores de Teclas ========== */
+.key.correct {
+  background-color: #4caf50 !important;
+  color: white !important;
 }
+.key.present {
+  background-color: #ffeb3b !important;
+  color: black !important;
+}
+.key.absent {
+  background-color: #965050 !important;
+  color: white !important;
+}
+
+/* ========== Media Queries para Móviles ========== */
+@media (max-width: 600px) {
+  .row {
+    height: 50px;
+  }
+  /* En móvil, para que el Backspace no sea demasiado ancho */
+  .row.row-3 .key.backspace {
+    grid-column: span 1;
+  }
+  .key {
+    font-size: 0.9rem;
+  }
+}
+
+/* (Opcional: si ves que las teclas en la fila 3 se "achatan", asegúrate de que el contenedor del grid tenga el ancho completo) */
